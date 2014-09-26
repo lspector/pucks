@@ -1,5 +1,4 @@
 (ns pucks.sensors
-  (:require [clojure.core.reducers :as r])
   (:use [pucks globals util vec2D]))
 
 (defn sense 
@@ -21,6 +20,4 @@ within sensor range."
   []
   (swap! world-objects
          (fn [objs]
-           (into [] (r/fold 16 r/cat r/append! (r/map sense objs))))))
-
-
+           (pmapallv sense objs))))

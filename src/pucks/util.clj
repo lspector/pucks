@@ -1,5 +1,4 @@
 (ns pucks.util
-  (:require [clojure.core.reducers :as r])
   (:use clojure.repl clojure.pprint quil.core pucks.globals pucks.vec2D))
 
 (defn wrap-rotation 
@@ -69,37 +68,17 @@ to (:screen-size parameters) (exclusive)."
   (when (zero? (mod @iteration 100)) 
     (println)
     (pprint (first @world-objects))))
-            
-
-#_(defn pmapall
-   "Like pmap but: 1) coll should be finite, 2) the returned sequence
-   will not be lazy, 3) calls to f may occur in any order, to maximize
-   multicore processor utilization, and 4) takes only one coll so far."
-   [f coll]
-   (if (:single-thread-mode @parameters)
-     (doall (map f coll))
-     (let [agents (map #(agent % :error-handler 
-                               (fn [agnt except] (clojure.repl/pst except 1000) (System/exit 0))) 
-                       coll)]
-       (dorun (map #(send % f) agents))
-       (apply await agents)
-       (doall (map deref agents)))))
-
-(defn pmapall
-   "Like pmap but: 1) coll should be finite, 2) the returned sequence
-   will not be lazy, 3) calls to f may occur in any order, to maximize
-   multicore processor utilization, and 4) takes only one coll so far."
-   [f coll]
-   (if (:single-thread-mode @parameters)
-     (doall (map f coll))
-     (r/fold 1 r/cat r/append! (r/map f coll))))
 
 (defn pmapallv
-   "Like pmap but: 1) coll should be finite, 2) the returned sequence
-   will be a vector, 3) calls to f may occur in any order, to maximize
+  "Like pmap but: 1) coll should be finite, 2) the returned sequence
+   will not be lazy, 3) calls to f may occur in any order, to maximize
    multicore processor utilization, and 4) takes only one coll so far."
-   [f coll]
-   (into []
-         (if (:single-thread-mode @parameters)
-           (doall (map f coll))
-           (r/fold 1 r/cat r/append! (r/map f coll)))))
+  [f coll]
+  (vec (if (:single-thread-mode @parameters)
+         (doall (map f coll))
+         (let [agents (map #(agent % :error-handler 
+                                   (fn [agnt except] (clojure.repl/pst except 1000) (System/exit 0))) 
+                           coll)]
+           (dorun (map #(send % f) agents))
+           (apply await agents)
+           (doall (map deref agents))))))

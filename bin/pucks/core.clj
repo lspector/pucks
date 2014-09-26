@@ -13,7 +13,7 @@
   []
   (when (not @paused)
     (swap! iteration inc)
-    (swap! world-objects (fn [objs] (map #(assoc % :steps (inc (:steps %))) objs))) ;; update step clocks in agents
+    (swap! world-objects (fn [objs] (mapv #(assoc % :steps (inc (:steps %))) objs))) ;; update step clocks in agents
     (update-neighbors) 
     (run-sensors)
     (generate-proposals) ;; should access only :sensed, not :neighbors (still needed for arbitration) and not :position

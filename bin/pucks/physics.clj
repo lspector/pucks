@@ -7,7 +7,7 @@
   (swap! world-objects
          (fn [objs]
            (into [] 
-                 (pmapall #(assoc % :proposals ((:proposal-function %) %))
+                 (pmapallv #(assoc % :proposals ((:proposal-function %) %))
                           objs)))))
 
 (defn colliding?

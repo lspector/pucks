@@ -1,6 +1,6 @@
 (ns pucks.worlds.dev.world1
   (:use [pucks core globals]
-        [pucks.agents nursery linear stone vent zapper swarmer beacon]))
+       [pucks.agents nursery linear stone vent zapper swarmer beacon]))
 
 (defn agents []
   (concat (repeatedly 10 stone)
