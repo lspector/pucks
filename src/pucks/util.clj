@@ -30,6 +30,9 @@
     (- (rand two-pi) pi)
     (atan2 x (- y))))
 
+(defn derelativize-position [reference-xy agent]
+  (assoc agent :position (wrap-position (+v reference-xy (:position agent)))))
+
 (defn rotation->direction [theta]
   [(Math/sin theta) (Math/cos (- theta Math/PI))])
 

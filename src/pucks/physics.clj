@@ -7,7 +7,10 @@
   (swap! world-objects
          (fn [objs]
            (into [] 
-                 (pmapallv #(assoc % :proposals ((:proposal-function %) %))
+                 (pmapallv #(assoc % :proposals ((:proposal-function %) 
+                                                  (-> %
+                                                    (assoc :neighbors [])
+                                                    (assoc :position [0 0]))))
                           objs)))))
 
 (defn colliding?
@@ -137,7 +140,9 @@
                                                                   (+ (- rotation minus-pi)
                                                                      (- pi proposed-r)))))))
                                            rotation)]
-                               (concat (or (:spawn proposals) [])
+                               (concat (or (mapv #(derelativize-position position %)
+                                                 (:spawn proposals))
+                                           [])
                                        [(-> obj
                                           (assoc :velocity new-v)
                                           (assoc :position new-p)
