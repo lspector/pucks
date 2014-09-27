@@ -35,7 +35,7 @@
 
 (defn vent []
   (merge-agents (generic)
-         {:agent-types #{:vent}
+         {:vent true
           :radius 50
           :draw-functions [draw-vent]
           :energy 1

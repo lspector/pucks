@@ -23,7 +23,7 @@
 
 (defn zigzag []
   (merge-agents (active)
-                {:agent-types #{zigzag}
+                {:zigzag true
                  :proposal-function zigzag-proposals
                  :color [255 0 255]
                  :memory {:turning :left}}))

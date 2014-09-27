@@ -27,7 +27,7 @@
 
 (defn beacon []
   (merge-agents (generic)
-                {:agent-types #{:beacon}
+                {:beacon true
                  :solid false
                  :color [255 255 128]
                  :radius (- (:neighborhood-size @parameters) (:sensor-range @parameters))

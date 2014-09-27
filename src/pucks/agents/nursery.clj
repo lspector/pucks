@@ -26,7 +26,7 @@
 
 (defn nursery [spawn-function]
   (merge-agents (generic)
-         {:agent-types #{:nursery}
+         {:nursery true
           :radius 50
           :draw-functions [draw-nursery]
           :energy 1

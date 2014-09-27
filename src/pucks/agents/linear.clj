@@ -8,7 +8,7 @@
 
 (defn linear []
   (merge-agents (active)
-                {:agent-types #{:linear}
+                {:linear true
                  :proposal-function linear-proposals
                  :color [0 0 255]}))
 

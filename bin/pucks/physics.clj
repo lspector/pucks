@@ -50,7 +50,7 @@
                                           other (other-id obj-map)]
                                       (cond 
                                         ;; vent
-                                        (some #{:vent} (:agent-types self)) 
+                                        (:vent self)
                                         (if (and (:mobile other)
                                                  (>= (:energy self)
                                                      (:energy (:bid (first t)))))
@@ -68,7 +68,7 @@
                                           (recur (rest remaining)
                                                  obj-map))
                                         ;; zapper
-                                        (some #{:zapper} (:agent-types self))
+                                        (:zapper self)
                                         (if (:mobile other)
                                           (recur (rest remaining)
                                                  (assoc obj-map 
@@ -147,7 +147,7 @@
                                                                    (- energy 
                                                                       (if mobile (:cost-of-living @parameters) 0)
                                                                       (if just-collided (:cost-of-collision @parameters) 0)
-                                                                      (if (some #{:vent} (:agent-types obj)) -0.005 0)))))
+                                                                      (if (:vent obj) -0.005 0)))))
                                           (assoc :just-collided just-collided)
                                           (assoc :memory (:memory proposals)))])))
                            post-xfer-objs)))))))
@@ -158,7 +158,7 @@
          (fn [objs]
            (let [with-corpses
                  (mapv #(if (and (:mobile %) (not (pos? (:energy %))))
-                          (merge-agents % {:agent-types #{:corpse}
+                          (merge-agents % {:corpse true
                                            :death-step (:steps %)
                                            :mobile false
                                            :color [100 100 100] 
@@ -166,7 +166,7 @@
                           %)
                        objs)]
              ;; eliminate corpses that are fully rotted
-             (filterv #(not (and (some #{:corpse} (:agent-types %))
+             (filterv #(not (and (:corpse %)
                                  (> (:steps %)
                                     (+ (:death-step %) 30))))
                       with-corpses)))))

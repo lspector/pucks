@@ -3,8 +3,7 @@
 
 (defn generic []
   {:id (gensym "puck-")
-   :agent-types #{:generic}
-   :mobile false
+   :mobile false ;; not sure if this currently has utility beyond being a synonym for :active
    :solid true
    :radius 20
    :position (rand-xy)

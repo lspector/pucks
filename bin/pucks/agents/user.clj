@@ -8,4 +8,5 @@
 
 (defn user []
   (merge-agents (active)
-                {:proposal-function user-proposals}))
+                {:user true
+                 :proposal-function user-proposals}))

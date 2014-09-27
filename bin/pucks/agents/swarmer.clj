@@ -15,7 +15,7 @@
 
 (defn swarmer []
   (merge-agents (active)
-                {:agent-types #{:swarmer}
+                {:swarmer true
                  :proposal-function swarmer-proposals}))
 
 

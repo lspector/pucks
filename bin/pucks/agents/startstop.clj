@@ -9,6 +9,6 @@
 
 (defn startstop []
   (merge-agents (active)
-                {:agent-types #{:startstop}
+                {:startstop true
                  :proposal-function startstop-proposals
                  :color [96 255 96]}))

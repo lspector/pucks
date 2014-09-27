@@ -48,7 +48,7 @@
 (defn active []
   (merge-agents (generic)
                 {:mobile true
-                 :agent-types #{:active}
+                 :active true
                  :radius 20
                  :color [128, 255, 0]
                  :eye-color [255, 255, 0]

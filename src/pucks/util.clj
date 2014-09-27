@@ -35,12 +35,10 @@
 
 (defn merge-agents
   "Like merge for all keys except :draw-functions, for which 
-this acts like merge-with concat, and :agent-types, for which this
-acts like merge-with clojure.set/union."
+this acts like merge-with concat."
   [& maps]
   (-> (apply merge maps)
-    (assoc :draw-functions (apply concat (mapv :draw-functions maps)))
-    (assoc :agent-types (apply clojure.set/union (mapv :agent-types maps)))))
+    (assoc :draw-functions (apply concat (mapv :draw-functions maps)))))
 
 (defn objects-overlapping-xy
   [x y]

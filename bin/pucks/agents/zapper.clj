@@ -28,7 +28,7 @@
 
 (defn zapper []
   (merge-agents (generic)
-                {:agent-types #{:zapper}
+                {:zapper true
                  :radius 50
                  :color [207 19 200]
                  :draw-functions [draw-zapper]
