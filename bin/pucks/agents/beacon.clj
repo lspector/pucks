@@ -30,7 +30,7 @@
                 {:beacon true
                  :solid false
                  :color [255 255 128]
-                 :radius (- (:neighborhood-size @parameters) (:sensor-range @parameters))
+                 :radius (- (:neighborhood-size @pucks-settings) (:sensor-range @pucks-settings))
                  :draw-functions [draw-beacon]
                  :proposal-function beacon-proposals
                  :id (gensym "beacon-")

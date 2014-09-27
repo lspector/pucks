@@ -12,7 +12,7 @@
   (java.lang.System/currentTimeMillis))
 
 (defn wrap-position [[x y]]
-  (let [screen-size (:screen-size @parameters)]
+  (let [screen-size (:screen-size @pucks-settings)]
     [(if (< x 0) 
        (+ screen-size x)
        (if (>= x screen-size)
@@ -52,9 +52,9 @@ this acts like merge-with concat."
 
 (defn rand-xy 
   "Returns a random [x y] where x and y can range from 0 (inclusive)
-to (:screen-size parameters) (exclusive)."
+to (:screen-size @pucks-settings) (exclusive)."
   []
-  [(rand-int (:screen-size @parameters)) (rand-int (:screen-size @parameters))])
+  [(rand-int (:screen-size @pucks-settings)) (rand-int (:screen-size @pucks-settings))])
 
 (defn pret 
   "Println and then return value v."
@@ -75,7 +75,7 @@ to (:screen-size parameters) (exclusive)."
    will not be lazy, 3) calls to f may occur in any order, to maximize
    multicore processor utilization, and 4) takes only one coll so far."
   [f coll]
-  (vec (if (:single-thread-mode @parameters)
+  (vec (if (:single-thread-mode @pucks-settings)
          (doall (map f coll))
          (let [agents (map #(agent % :error-handler 
                                    (fn [agnt except] (clojure.repl/pst except 1000) (System/exit 0))) 

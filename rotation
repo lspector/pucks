@@ -1,0 +1,8 @@
+src/pucks/agents/linear.clj:   :rotation (direction->rotation (:velocity p))})
+src/pucks/agents/swarmer.clj:   :rotation (direction->rotation 
+src/pucks/agents/user.clj:   :rotation (direction->rotation (:velocity p))})
+src/pucks/physics.clj:                                                (direction->rotation new-v)
+src/pucks/scrap.clj:                       :d->r (direction->rotation [x y]) 
+src/pucks/scrap.clj:                       :d->r->d (rotation->direction (direction->rotation [x y]))})))]
+src/pucks/sensors.clj:                                          (direction->rotation (:position %))))]
+src/pucks/util.clj:(defn direction->rotation [[x y]]

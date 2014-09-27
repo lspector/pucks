@@ -20,7 +20,7 @@
                                   (relativize-positions
                                     (filterv #(and (not (= (:id obj) (:id %)))
                                                    (<= (length (mapv - (:position obj) (:position %)))
-                                                       (:neighborhood-size @parameters)))
+                                                       (:neighborhood-size @pucks-settings)))
                                              stripped)
                                     (:position obj)))]
                      (-> obj

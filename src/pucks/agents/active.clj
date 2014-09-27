@@ -27,7 +27,7 @@
       (ellipse 0 0 (* radius 0.2) (* radius 0.2)))
     ;; show sensor range, but only in forward direction
     (fill 255 255 255 20)
-    (let [s (* (:sensor-range @parameters) 2)]
+    (let [s (* (:sensor-range @pucks-settings) 2)]
       (arc 0 0 s s pi two-pi))
     ;; show collisions
     (when (:just-collided p)

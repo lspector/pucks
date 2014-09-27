@@ -13,7 +13,7 @@ within sensor range."
                          (or (<= angular-difference half-pi)
                              (>= angular-difference (+ pi half-pi)))) 
                        (<= (- (length (:position %)) (:radius %)) ;; within range
-                           (:sensor-range @parameters)))
+                           (:sensor-range @pucks-settings)))
                  (:neighbors p))))
 
 (defn run-sensors

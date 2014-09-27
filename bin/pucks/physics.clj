@@ -94,27 +94,22 @@
                                                                                         neighbors)]
                                                         (if (empty? colliding-neighbors)
                                                           [0 0]
-                                                          (*v (:collision-resolution-force @parameters)
+                                                          (*v (:collision-resolution-force @pucks-settings)
                                                               (apply avgv 
                                                                      (mapv -v (mapv :position
                                                                                     colliding-neighbors))))))
                                                       [0 0])
-                                   ;_ (when mobile (println "anti-collision-a" anti-collision-a))
                                    just-collided (not (zero? (length anti-collision-a)))
-                                   new-a (limit-vec2D (+v proposed-a anti-collision-a) (:max-acceleration @parameters))
-                                   ;_ (when mobile (println "new-a" new-a))
+                                   new-a (limit-vec2D (+v proposed-a anti-collision-a) (:max-acceleration @pucks-settings))
                                    proposed-v (+v velocity new-a)
-                                   ;_ (when mobile (println "proposed-v" proposed-v))
-                                   new-v (if mobile (limit-vec2D proposed-v (* (:max-velocity @parameters) radius)) [0 0])
-                                   ;_ (when mobile (println "new-v" new-v))
+                                   new-v (if mobile (limit-vec2D proposed-v (* (:max-velocity @pucks-settings) radius)) [0 0])
                                    new-p (wrap-position (+v position new-v))
-                                   ;_ (when mobile (println "new-p" new-p))
                                    proposed-r (if (= (:rotation proposals) :from-velocity)
                                                 (direction->rotation new-v)
                                                 (or (:rotation proposals) 0))
                                    new-r (if mobile
                                            (wrap-rotation
-                                             (let [max-rotational-velocity (:max-rotational-velocity @parameters)]
+                                             (let [max-rotational-velocity (:max-rotational-velocity @pucks-settings)]
                                                (cond 
                                                  ;; already there
                                                  (== proposed-r rotation) 
@@ -150,8 +145,8 @@
                                           (assoc :energy (min 1
                                                               (max 0
                                                                    (- energy 
-                                                                      (if mobile (:cost-of-living @parameters) 0)
-                                                                      (if just-collided (:cost-of-collision @parameters) 0)
+                                                                      (if mobile (:cost-of-living @pucks-settings) 0)
+                                                                      (if just-collided (:cost-of-collision @pucks-settings) 0)
                                                                       (if (:vent obj) -0.005 0)))))
                                           (assoc :just-collided just-collided)
                                           (assoc :memory (:memory proposals)))])))

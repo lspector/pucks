@@ -12,7 +12,7 @@
 
 ;; simulation parameters
 
-(def parameters
+(def pucks-settings
   (atom {:screen-size 800
          :neighborhood-size 200 ;; should be at least the sensor range + largest radius
          :sensor-range 100

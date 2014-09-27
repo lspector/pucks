@@ -33,12 +33,12 @@
 
 (defn run-pucks [agents settings]
   (reset! world-objects agents)
-  (swap! parameters #(merge % settings))
+  (swap! pucks-settings #(merge % settings))
   (sketch
       :title "pucks"
       :setup setup
       :draw draw
-      :size [(:screen-size @parameters) (:screen-size @parameters)]
+      :size [(:screen-size @pucks-settings) (:screen-size @pucks-settings)]
       ;:mouse-moved mouse-moved
       ;:on-close #(System/exit 0)
       ))
