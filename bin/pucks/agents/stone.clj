@@ -20,9 +20,9 @@
   {})
 
 (defn stone []
-  (merge-agents (generic)
-                {:stone true
-                 :radius 40
-                 :draw-functions [draw-stone]
-                 :proposal-function stone-proposals}))
+  (merge (generic)
+         {:stone true
+          :radius 40
+          :draw-functions [draw-stone]
+          :proposal-function stone-proposals}))
 

@@ -158,11 +158,11 @@
          (fn [objs]
            (let [with-corpses
                  (mapv #(if (and (:mobile %) (not (pos? (:energy %))))
-                          (merge-agents % {:corpse true
-                                           :death-step (:steps %)
-                                           :mobile false
-                                           :color [100 100 100] 
-                                           :proposal-function (fn [p] {})})
+                          (merge % {:corpse true
+                                    :death-step (:steps %)
+                                    :mobile false
+                                    :color [100 100 100] 
+                                    :proposal-function (fn [p] {})})
                           %)
                        objs)]
              ;; eliminate corpses that are fully rotted

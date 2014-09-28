@@ -46,12 +46,12 @@
     (pop-matrix)))
 
 (defn active []
-  (merge-agents (generic)
-                {:mobile true
-                 :active true
-                 :radius 20
-                 :color [128, 255, 0]
-                 :eye-color [255, 255, 0]
-                 :energy 1
-                 :draw-functions [draw-active]}))
+  (merge (generic)
+         {:mobile true
+          :active true
+          :radius 20
+          :color [128, 255, 0]
+          :eye-color [255, 255, 0]
+          :energy 1
+          :draw-functions [draw-active]}))
 

@@ -22,8 +22,8 @@
                     {:turning direction})}))
 
 (defn zigzag []
-  (merge-agents (active)
-                {:zigzag true
-                 :proposal-function zigzag-proposals
-                 :color [255 0 255]
-                 :memory {:turning :left}}))
+  (merge (active)
+         {:zigzag true
+          :proposal-function zigzag-proposals
+          :color [255 0 255]
+          :memory {:turning :left}}))

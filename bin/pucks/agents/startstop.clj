@@ -8,7 +8,7 @@
                   (* 0.25 (- (length (:velocity p)))))}) ;; if you don't scale the reverse acceleration you can get oscillations
 
 (defn startstop []
-  (merge-agents (active)
-                {:startstop true
-                 :proposal-function startstop-proposals
-                 :color [96 255 96]}))
+  (merge (active)
+         {:startstop true
+          :proposal-function startstop-proposals
+          :color [96 255 96]}))

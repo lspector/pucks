@@ -7,6 +7,6 @@
    :rotation (direction->rotation (:velocity p))})
 
 (defn user []
-  (merge-agents (active)
-                {:user true
-                 :proposal-function user-proposals}))
+  (merge (active)
+         {:user true
+          :proposal-function user-proposals}))

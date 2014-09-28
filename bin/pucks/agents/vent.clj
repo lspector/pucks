@@ -34,7 +34,7 @@
                          :ask {}}))})
 
 (defn vent []
-  (merge-agents (generic)
+  (merge (generic)
          {:vent true
           :radius 50
           :draw-functions [draw-vent]

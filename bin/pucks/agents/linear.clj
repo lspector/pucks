@@ -7,8 +7,8 @@
    :rotation (direction->rotation (:velocity p))})
 
 (defn linear []
-  (merge-agents (active)
-                {:linear true
-                 :proposal-function linear-proposals
-                 :color [0 0 255]}))
+  (merge (active)
+         {:linear true
+          :proposal-function linear-proposals
+          :color [0 0 255]}))
 

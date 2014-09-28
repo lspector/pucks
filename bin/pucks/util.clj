@@ -36,13 +36,6 @@
 (defn rotation->direction [theta]
   [(Math/sin theta) (Math/cos (- theta Math/PI))])
 
-(defn merge-agents
-  "Like merge for all keys except :draw-functions, for which 
-this acts like merge-with concat."
-  [& maps]
-  (-> (apply merge maps)
-    (assoc :draw-functions (apply concat (mapv :draw-functions maps)))))
-
 (defn objects-overlapping-xy
   [x y]
   (filterv (fn [o]

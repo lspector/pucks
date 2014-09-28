@@ -27,10 +27,10 @@
                          :ask {:energy 0.1}}))})
 
 (defn zapper []
-  (merge-agents (generic)
-                {:zapper true
-                 :radius 50
-                 :color [207 19 200]
-                 :draw-functions [draw-zapper]
-                 :energy 1
-                 :proposal-function zapper-proposals}))
+  (merge (generic)
+         {:zapper true
+          :radius 50
+          :color [207 19 200]
+          :draw-functions [draw-zapper]
+          :energy 1
+          :proposal-function zapper-proposals}))
