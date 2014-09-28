@@ -37,6 +37,6 @@
   (merge (generic)
          {:vent true
           :radius 50
-          :draw-functions [draw-vent]
+          :draw-function draw-vent
           :energy 1
           :proposal-function vent-proposals}))

@@ -53,5 +53,5 @@
           :color [128, 255, 0]
           :eye-color [255, 255, 0]
           :energy 1
-          :draw-functions [draw-active]}))
+          :draw-function draw-active}))
 

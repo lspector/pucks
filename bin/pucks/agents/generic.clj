@@ -16,5 +16,5 @@
    :overlaps []
    :memory {}
    :inventory #{}
-   :draw-functions [(fn [p] false)]
+   :draw-function (fn [p] false)
    :proposal-function (fn [p] {})})

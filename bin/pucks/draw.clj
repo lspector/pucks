@@ -5,5 +5,4 @@
   []
   (background 230 180 230)
   (doseq [obj @world-objects] 
-    (doseq [f (:draw-functions obj)]
-      (f obj))))
+    ((:draw-function obj) obj)))

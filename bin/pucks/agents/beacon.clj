@@ -31,7 +31,7 @@
           :solid false
           :color [255 255 128]
           :radius (- (:neighborhood-size @pucks-settings) (:sensor-range @pucks-settings))
-          :draw-functions [draw-beacon]
+          :draw-function draw-beacon
           :proposal-function beacon-proposals
           :id (gensym "beacon-")
           :position (rand-xy)}))

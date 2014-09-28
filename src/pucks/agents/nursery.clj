@@ -28,7 +28,7 @@
   (merge (generic)
          {:nursery true
           :radius 50
-          :draw-functions [draw-nursery]
+          :draw-function draw-nursery
           :energy 1
           :color [139 0 0]
           :proposal-function nursery-proposals

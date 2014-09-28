@@ -23,6 +23,6 @@
   (merge (generic)
          {:stone true
           :radius 40
-          :draw-functions [draw-stone]
+          :draw-function draw-stone
           :proposal-function stone-proposals}))
 
