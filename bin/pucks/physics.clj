@@ -104,10 +104,8 @@
                                    proposed-v (+v velocity new-a)
                                    new-v (if mobile (limit-vec2D proposed-v (* (:max-velocity @pucks-settings) radius)) [0 0])
                                    new-p (wrap-position (+v position new-v))
-                                   proposed-r (if (= (:rotation proposals) :from-velocity)
-                                                (direction->rotation new-v)
-                                                (or (:rotation proposals) 0))
-                                   new-r (if mobile
+                                   proposed-r (:rotation proposals)
+                                   new-r (if (and mobile proposed-r)
                                            (wrap-rotation
                                              (let [max-rotational-velocity (:max-rotational-velocity @pucks-settings)]
                                                (cond 
