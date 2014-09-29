@@ -3,7 +3,7 @@
 
 (defn generic []
   {:id (gensym "puck-")
-   :mobile false ;; not sure if this currently has utility beyond being a synonym for :active
+   :mobile false
    :solid true
    :radius 20
    :position (rand-xy)

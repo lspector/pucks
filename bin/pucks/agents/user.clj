@@ -4,9 +4,13 @@
 
 (defn user-proposals [p]
   {:acceleration 0
-   :rotation (direction->rotation (:velocity p))})
+  ; :rotation (direction->rotation (:velocity p))
+  }
+  )
 
 (defn user []
   (merge (active)
          {:user true
-          :proposal-function user-proposals}))
+          :proposal-function user-proposals
+          :rotation (/ pi 3/2)
+          :velocity [0 0]}))
