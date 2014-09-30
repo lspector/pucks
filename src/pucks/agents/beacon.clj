@@ -1,3 +1,5 @@
+;; Definitions for beacon agents.
+
 (ns pucks.agents.beacon
     (:use quil.core 
         [pucks globals util vec2D]
@@ -22,6 +24,9 @@
 (defn beacon-proposals [p]
   {})
 
+;; Beacons are defined to be the maximal size compatible with the provided
+;; sensor range and neighborhood size:
+;; 
 ;; beacon-radius + sensor-range = neighborhood-size
 ;; => beacon-radius = neighborhood-size - sensor-range
 
@@ -30,7 +35,8 @@
          {:beacon true
           :solid false
           :color [255 255 128]
-          :radius (- (:neighborhood-size @pucks-settings) (:sensor-range @pucks-settings))
+          :radius (- (:neighborhood-size @pucks-settings) 
+                     (:sensor-range @pucks-settings))
           :draw-function draw-beacon
           :proposal-function beacon-proposals
           :id (gensym "beacon-")

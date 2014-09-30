@@ -1,3 +1,5 @@
+;; A pucks world.
+
 (ns pucks.worlds.dev.world4
   (:use [pucks core globals]
         [pucks.agents linear stone]))

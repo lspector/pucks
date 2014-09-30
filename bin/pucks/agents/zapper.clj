@@ -1,3 +1,5 @@
+;; Definitions for zapper agents.
+
 (ns pucks.agents.zapper
   (:use quil.core 
         [pucks globals util vec2D]
@@ -17,12 +19,13 @@
     (ellipse 0 0 radius radius)
     (pop-matrix)))
 
+;; Take energy from any overlapping mobile agent, without giving anything in
+;; return.
+
 (defn zapper-proposals [p]
   {:transfer (into [] (for [victim (filter :mobile (:overlaps p))]
                         {:self (:id p)
-                         :self-types (:agent-types p)
                          :other (:id victim)
-                         :other-types (:agent-types victim)
                          :bid {}
                          :ask {:energy 0.1}}))})
 
@@ -32,5 +35,4 @@
           :radius 50
           :color [207 19 200]
           :draw-function draw-zapper
-          :energy 1
           :proposal-function zapper-proposals}))

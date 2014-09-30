@@ -1,3 +1,5 @@
+;; Definitions for swarmer agents.
+
 (ns pucks.agents.swarmer
   (:use [pucks globals util vec2D]
         pucks.agents.active))

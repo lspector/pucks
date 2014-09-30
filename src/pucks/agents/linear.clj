@@ -1,3 +1,5 @@
+;; Definitions for linear agents.
+
 (ns pucks.agents.linear
   (:use [pucks globals util]
         [pucks.agents active]))

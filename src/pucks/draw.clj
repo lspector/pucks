@@ -1,8 +1,12 @@
+;; Draws the pucks world by setting the background color and 
+;; drawing all agents to the display using their :draw-functions.
+
 (ns pucks.draw
   (:use quil.core pucks.globals))
 
-(defn draw-world-objects
+(defn draw-agents
+  "Sets the background color and calls the :draw-functions of all agents."
   []
   (background 230 180 230)
-  (doseq [obj @world-objects] 
-    ((:draw-function obj) obj)))
+  (doseq [a @all-agents] 
+    ((:draw-function a) a)))

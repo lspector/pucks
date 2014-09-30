@@ -1,3 +1,6 @@
+;; Definitions for zigzag agents, which achieve their zigzags by using
+;; memory.
+
 (ns pucks.agents.zigzag
   (:use [pucks globals util vec2D]
         pucks.agents.active))

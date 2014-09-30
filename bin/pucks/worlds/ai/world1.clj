@@ -1,3 +1,5 @@
+;; A pucks world.
+
 (ns pucks.worlds.ai.world1  
   (:use [pucks core globals]
         [pucks.agents stone vent zapper user]))

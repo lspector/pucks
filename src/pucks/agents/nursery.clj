@@ -1,3 +1,5 @@
+;; Definitions for nursery agents.
+
 (ns pucks.agents.nursery
   (:use quil.core 
         [pucks globals util vec2D]
@@ -24,12 +26,14 @@
                                (+ (second (:position p)) (- (rand-int 3) 1))])]}
     {}))
 
+;; The nursery function, which creates a nursery agent, must be called with 
+;; a spawn function argument, which will be called to produce child agents.
+
 (defn nursery [spawn-function]
   (merge (generic)
          {:nursery true
           :radius 50
           :draw-function draw-nursery
-          :energy 1
           :color [139 0 0]
           :proposal-function nursery-proposals
           :spawn-function spawn-function}))

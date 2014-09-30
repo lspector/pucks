@@ -1,3 +1,5 @@
+;; Definitions for vent agents.
+
 (ns pucks.agents.vent
   (:use quil.core 
         [pucks globals util vec2D]
@@ -22,14 +24,12 @@
     (ellipse 0 0 core-diameter core-diameter)
     (pop-matrix)))
 
+;; Give energy to any overlapping mobile agent, asking nothing in return.
+
 (defn vent-proposals [p]
   {:transfer (into [] (for [recipient (filter :mobile (:overlaps p))]
                         {:self (:id p)
-                         ;:full-self p
-                         :self-types (:agent-types p)
                          :other (:id recipient)
-                         ;:full-other recipient
-                         :other-types (:agent-types recipient)
                          :bid {:energy 0.01}
                          :ask {}}))})
 
@@ -38,5 +38,4 @@
          {:vent true
           :radius 50
           :draw-function draw-vent
-          :energy 1
           :proposal-function vent-proposals}))

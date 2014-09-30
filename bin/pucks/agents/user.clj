@@ -1,3 +1,6 @@
+;; Definition for user agents. This is a good template to build on to produce
+;; smarter agents.
+
 (ns pucks.agents.user  
   (:use [pucks globals util]
         [pucks.agents active]))

@@ -1,3 +1,5 @@
+;; Sensor functions for pucks.
+
 (ns pucks.sensors
   (:use [pucks globals util vec2D]))
 
@@ -17,7 +19,9 @@ within sensor range."
                  (:neighbors p))))
 
 (defn run-sensors
+  "Annotates all agents with the other agents that they can sense, as the value
+   for the :sensed key."
   []
-  (swap! world-objects
+  (swap! all-agents
          (fn [objs]
            (pmapallv sense objs))))

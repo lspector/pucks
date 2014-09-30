@@ -1,3 +1,5 @@
+;; A pucks world.
+
 (ns pucks.worlds.dev.world5
   (:use [pucks globals]
         [pucks.agents zigzag startstop]))

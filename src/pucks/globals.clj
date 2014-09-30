@@ -1,14 +1,16 @@
+;; Global variables for pucks.
+
 (ns pucks.globals)
 
 ;; the state of the world is stored in atoms
 
-(def world-objects (atom []))
+(def all-agents (atom []))   ;; all agents in the simulation
 
-(def iteration (atom 0))
+(def iteration (atom 0))     ;; the number of simulation steps completed
 
-(def last-input-ms (atom 0))
+(def last-input-ms (atom 0)) ;; the time (in ms) at which the last GUI input was received
 
-(def paused (atom false))
+(def paused (atom false))    ;; true if the simulation is paused
 
 ;; simulation parameters
 
@@ -17,10 +19,10 @@
          :neighborhood-size 200 ;; should be at least the sensor range + largest radius
          :sensor-range 100
          :single-thread-mode true
-         :max-velocity 0.2
+         :max-velocity 80
          :max-acceleration 1
          :max-rotational-velocity 0.05
-         :collision-resolution-force 100.0
+         :collision-resolution-acceleration 100.0
          :cost-of-living 0.001
          :cost-of-collision 0.01}))
 

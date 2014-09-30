@@ -1,3 +1,5 @@
+;; Definitions for stones.
+
 (ns pucks.agents.stone
   (:use quil.core 
         [pucks globals util vec2D]

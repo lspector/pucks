@@ -1,3 +1,5 @@
+;; A pucks world.
+
 (ns pucks.worlds.dev.world2
   (:use [pucks core globals]
         [pucks.agents linear vent]))

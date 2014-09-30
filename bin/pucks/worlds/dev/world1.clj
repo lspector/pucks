@@ -1,3 +1,5 @@
+;; A pucks world.
+
 (ns pucks.worlds.dev.world1
   (:use [pucks core globals]
        [pucks.agents nursery linear stone vent zapper swarmer beacon]))
@@ -6,8 +8,10 @@
   (concat (repeatedly 10 stone)
           (repeatedly 10 vent)
           (repeatedly 5 zapper)
-          (repeatedly 2 #(nursery linear))
-          (repeatedly 2 #(nursery swarmer))
+          [(nursery #(merge (linear) {:inventory #{:something}}))]
+          [(nursery #(merge (swarmer) {:memory {:something :rembered}}))]
+          [(nursery linear)]
+          [(nursery swarmer)]
           (repeatedly 2 beacon)))
 
 

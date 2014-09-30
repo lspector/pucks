@@ -1,3 +1,5 @@
+;; Definitions for active agents.
+
 (ns pucks.agents.active
   (:use quil.core 
         [pucks globals util vec2D]
@@ -49,9 +51,7 @@
   (merge (generic)
          {:mobile true
           :active true
-          :radius 20
           :color [128, 255, 0]
           :eye-color [255, 255, 0]
-          :energy 1
           :draw-function draw-active}))
 

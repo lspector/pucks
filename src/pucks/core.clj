@@ -1,47 +1,64 @@
+;; This is the main program file for pucks. It defines setup and draw functions,
+;; which are used by Quil (a.k.a. the Processing library, packaged for Clojure)
+;; to set up a simulation. The top-level function, run-pucks, runs a Quil
+;; sketch using the provided setup and draw functions. A -main function is
+;; also defined so that simulations can be launced from a "lein run" command
+;; line.
+
 (ns pucks.core
   (:use quil.core clojure.pprint
-        [pucks globals util vec2D physics neighbors sensors draw]
+        [pucks globals util vec2D physics reap neighbors sensors draw]
         clojure.inspector)
   (:gen-class))
 
-(defn setup []
+(defn setup 
+  "The Quil setup function for pucks. Initializes drawing parameters and
+the global iteration counter."
+  []
   (smooth)
   (no-stroke)
   (reset! iteration 0))
 
 (defn draw
+  "The Quil draw function for pucks. In addition to stepping forward the
+simulation and actually drawing the world to the display, it also handles
+GUI interactions."
   []
-  (when (not @paused)
-    (swap! iteration inc)
-    (swap! world-objects (fn [objs] (mapv #(assoc % :steps (inc (:steps %))) objs))) ;; update step clocks in agents
-    (update-neighbors) 
-    (run-sensors)
-    (generate-proposals) ;; should access only :sensed, not :neighbors (still needed for arbitration) and not :position
-    (arbitrate-proposals)
-    (reap)
-    (draw-world-objects))
+  (when (not @paused)     ;; only step forward and draw if not paused
+    (swap! iteration inc) ;; increment the global interation counter
+    (swap! all-agents     ;; update step clocks in agents
+           (fn [objs] (mapv #(assoc % :steps (inc (:steps %))) objs))) 
+    (update-neighbors)    ;; update the neighbors in all agents
+    (run-sensors)         ;; augment each agent with sensed objects
+    (generate-proposals)  ;; generate proposals from each agent
+    (arbitrate-proposals) ;; arbitrate proposals and make changes to world
+    (reap)                ;; eliminate any dead agents
+    (draw-agents))        ;; draw the world to the display
+  ;; handle space-key presses to pause/unpause the simulation
   (when (and (key-pressed?)
-             (> (ms) (+ 500 @last-input-ms))) ;; avoid triggering multiple times for one key press
+             ;; avoid triggering multiple times for one key press
+             (> (ms) (+ 500 @last-input-ms))) 
     (reset! last-input-ms (ms))
     (when (= (raw-key) \space) 
       (swap! paused not)))
+  ;; handle mouse clicks by printing and inspecting objects at click location
   (when (and (mouse-pressed?)
+             ;; avoid triggering multiple times for one click
              (> (ms) (+ 500 @last-input-ms)))
     (reset! last-input-ms (ms))
     (pprint (objects-overlapping-xy (mouse-x) (mouse-y)))
     (inspect-tree (objects-overlapping-xy (mouse-x) (mouse-y)))))
 
 (defn run-pucks [agents settings]
-  (reset! world-objects agents)
+  "Run a pucks simulation with the provided agents and settings (which will
+be merged with the defaults)."
+  (reset! all-agents agents)
   (swap! pucks-settings #(merge % settings))
   (sketch
       :title "pucks"
       :setup setup
       :draw draw
-      :size [(:screen-size @pucks-settings) (:screen-size @pucks-settings)]
-      ;:mouse-moved mouse-moved
-      ;:on-close #(System/exit 0)
-      ))
+      :size [(:screen-size @pucks-settings) (:screen-size @pucks-settings)]))
 
 (defn -main 
   "This main function allows simulations to be run from the command line with:
@@ -53,5 +70,3 @@
     (require world-ns)
     (run-pucks ((ns-resolve world-ns 'agents))
                (merge ((ns-resolve world-ns 'settings)) settings))))
-
-

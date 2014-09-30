@@ -1,3 +1,5 @@
+;; General utility functions for pucks.
+
 (ns pucks.util
   (:use clojure.repl clojure.pprint quil.core pucks.globals pucks.vec2D))
 
@@ -9,9 +11,14 @@
        :else r))
 
 (defn ms []
+  "Returns the current time in milliseconds."
   (java.lang.System/currentTimeMillis))
 
 (defn wrap-position [[x y]]
+  "Returns the given coordinate if it refers to a position in the world. If not,
+then this returns the coordinate resulting from wrapping the coordinate around
+the world, assuming it is torroidal, so that the returned coordinate will indeed
+refer to a position in the world." 
   (let [screen-size (:screen-size @pucks-settings)]
     [(if (< x 0) 
        (+ screen-size x)
@@ -25,23 +32,35 @@
          y))]))
 
 (defn direction->rotation [[x y]]
-  ;;http://stackoverflow.com/questions/2276855/xna-2d-vector-angles-whats-the-correct-way-to-calculate
+  "Returns a rotation corresponding to a provided [x y] vector."
+  ;; from http://stackoverflow.com/questions/2276855/xna-2d-vector-angles-whats-the-correct-way-to-calculate
   (if (and (zero? x) (zero? y))
     (- (rand two-pi) pi)
     (atan2 x (- y))))
 
+(defn relativize-positions
+  "Returns agents but will all positions converted to be relative to the provided
+position."
+  [agents position]
+  (mapv #(assoc % :position (-v (:position %) position))
+        agents))
+
 (defn derelativize-position [reference-xy agent]
+  "Returns agent but with its position augmented by reference-xy."
   (assoc agent :position (wrap-position (+v reference-xy (:position agent)))))
 
 (defn rotation->direction [theta]
+  "Returns an [x y] vector pointing in the direction of the given rotation."
   [(Math/sin theta) (Math/cos (- theta Math/PI))])
 
 (defn objects-overlapping-xy
+  "Returns a vector of all objects in the world that overlap the given 
+position."
   [x y]
   (filterv (fn [o]
              (< (distance (:position o) [x y])
                 (:radius o)))
-           @world-objects))
+           @all-agents))
 
 (defn rand-xy 
   "Returns a random [x y] where x and y can range from 0 (inclusive)
@@ -56,17 +75,17 @@ to (:screen-size @pucks-settings) (exclusive)."
     v))
 
 (defn print-stats []
-  (println "World objects:" (count @world-objects))
-  (println "Avg neighbors" (float (/ (reduce + (map count (map :neighbors @world-objects)))
-                                     (count @world-objects))))
-  (when (zero? (mod @iteration 100)) 
-    (println)
-    (pprint (first @world-objects))))
+  "Prints a statistics about the state of the world."
+  (println "World objects:" (count @all-agents))
+  (println "Avg neighbors" (float (/ (reduce + (map count (map :neighbors @all-agents)))
+                                     (count @all-agents)))))
 
 (defn pmapallv
-  "Like pmap but: 1) coll should be finite, 2) the returned sequence
-   will not be lazy, 3) calls to f may occur in any order, to maximize
-   multicore processor utilization, and 4) takes only one coll so far."
+  "A utility for concurrent execution of a function on items in a collection.
+In single-thread-mode this acts like mapv. Otherwise it acts like pmap but: 
+1) coll should be finite, 2) the returned sequence will not be lazy, and will
+in fact be a vector, 3) calls to f may occur in any order, to maximize
+multicore processor utilization, and 4) takes only one coll so far."
   [f coll]
   (vec (if (:single-thread-mode @pucks-settings)
          (doall (map f coll))
