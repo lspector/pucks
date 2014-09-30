@@ -95,6 +95,7 @@ Key | Value | Default
 |---|---|---|
 :mobile | boolean, indicating whether the puck can move | false
 :solid | boolean, indicating whether the puck has a solid core | true
+:just-collided | boolean, for active pucks only, indicating whether the puck had a collision in the immediately preceding time step | false
 (key corresponding to an agent type) | boolean, indicating whether the agent is of that type | false
 
 ## Proposals
