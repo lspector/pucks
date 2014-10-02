@@ -26,13 +26,11 @@ from inappropriately learning about agents that they have not sensed directly."
        (pmapallv ;; do this concurrently if not in single-thread-mode
          (fn [obj]
            (let [neighs 
-                 (vec 
-                   (relativize-positions ;; positions are relative to the agent
-                     (filterv #(and (not (= (:id obj) (:id %)))
-                                    (<= (length (mapv - (:position obj) (:position %)))
-                                        (:neighborhood-size @pucks-settings)))
-                              stripped)
-                     (:position obj)))]
+                 (mapv #(relativize-position % (:position obj));; positions are relative to the agent
+                       (filterv #(and (not (= (:id obj) (:id %)))
+                                      (<= (length (mapv - (:position obj) (:position %)))
+                                          (:neighborhood-size @pucks-settings)))
+                                stripped))]
              (-> obj
                (assoc :neighbors neighs)
                (assoc :overlaps

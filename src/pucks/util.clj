@@ -38,19 +38,20 @@ refer to a position in the world."
     (- (rand two-pi) pi)
     (atan2 x (- y))))
 
-(defn relativize-positions
-  "Returns agents but will all positions converted to be relative to the provided
+(defn relativize-position
+  "Returns agent but will its position converted to be relative to the provided
 position."
-  [agents position]
-  (mapv #(assoc % :position (-v (:position %) position))
-        agents))
+  [agent position]
+  (assoc agent :position (-v (:position agent) position)))
 
-(defn derelativize-position [reference-xy agent]
+(defn derelativize-position 
   "Returns agent but with its position augmented by reference-xy."
+  [reference-xy agent]
   (assoc agent :position (wrap-position (+v reference-xy (:position agent)))))
 
-(defn rotation->direction [theta]
+(defn rotation->direction 
   "Returns an [x y] vector pointing in the direction of the given rotation."
+  [theta]
   [(Math/sin theta) (Math/cos (- theta Math/PI))])
 
 (defn objects-overlapping-xy
