@@ -1,2 +1,2 @@
-cmdhistory=["(run-pucks (agents) (settings))"]
+cmdhistory=["(run-pucks (agents) (settings))" "(user-proposals (active))" "(let [p (active)]\\n  (println \\"puck\:\\" p)\\n  (println \\"proposals\:\\" (user-proposals p)))" "(user)"]
 eclipse.preferences.version=1
