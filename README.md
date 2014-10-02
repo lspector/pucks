@@ -82,6 +82,7 @@ Key | Value | Default
 :energy | a floating-point number between 0 and 1 | 1
 :steps | the number of time steps that the agent has been alive | 0
 :neighbors | other pucks within the neighborhood of this puck; this information is not accessible by proposal functions | empty sequence
+:sensed | other pucks that can be sensed by this puck | empty sequence
 :overlaps | other pucks with membranes overlapping with this puck | empty sequence
 :memory | any information that the agent wants to store, in a map | empty map
 :inventory | items held by the agent | empty set
