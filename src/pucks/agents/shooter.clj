@@ -14,5 +14,5 @@
   (merge (active)
          {:linear true
           :proposal-function shooter-proposals
-          :color [0 0 255]}))
+          :color [255 0 0]}))
 

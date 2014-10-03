@@ -37,8 +37,7 @@
      (merge (zapper) {:position [600 200]})]
     [(merge (vent) {:position [600 600]})]
     ;; fast shooter nursery
-    [(merge (nursery #(merge (shooter) 
-                             {:velocity [(- (rand 2.0) 1.0) (- (rand 2.0) 1.0)]}))
+    [(merge (nursery shooter) 
             {:position [200 200]})]))
 
 (defn settings []
