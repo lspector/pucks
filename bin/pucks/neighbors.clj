@@ -25,17 +25,19 @@ from inappropriately learning about agents that they have not sensed directly."
      (let [stripped (mapv strip-embedded-agents objs)]
        (pmapallv ;; do this concurrently if not in single-thread-mode
          (fn [obj]
-           (let [neighs 
-                 (mapv #(relativize-position % (:position obj));; positions are relative to the agent
-                       (filterv #(and (not (= (:id obj) (:id %)))
-                                      (<= (distance (:position obj) (:position %))
-                                          (:neighborhood-size @pucks-settings)))
-                                stripped))]
-             (-> obj
-               (assoc :neighbors neighs)
-               (assoc :overlaps
-                      (filterv #(<= (length (:position %))
-                                    (+ (:radius obj) (:radius %)))
-                               neighs)))))
+           (if (:stone obj) ;; stones don't need neighbors
+             obj
+             (let [neighs 
+                   (mapv #(relativize-position % (:position obj));; positions are relative to the agent
+                         (filterv #(and (not (= (:id obj) (:id %)))
+                                        (<= (distance (:position obj) (:position %))
+                                            (:neighborhood-size @pucks-settings)))
+                                  stripped))]
+               (-> obj
+                 (assoc :neighbors neighs)
+                 (assoc :overlaps
+                        (filterv #(<= (length (:position %))
+                                      (+ (:radius obj) (:radius %)))
+                                 neighs))))))
          stripped)))))
 
