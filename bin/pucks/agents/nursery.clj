@@ -22,8 +22,8 @@
 (defn nursery-proposals [p]
   (if (zero? (rand-int 50))
     {:spawn [(assoc ((:spawn-function p))
-                    :position [(+ (first (:position p)) (- (rand-int 3) 1))
-                               (+ (second (:position p)) (- (rand-int 3) 1))])]}
+                    ;; position will be relative to position of parent
+                    :position [(- (rand-int 3) 1) (- (rand-int 3) 1)])]}
     {}))
 
 ;; The nursery function, which creates a nursery agent, must be called with 

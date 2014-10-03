@@ -28,7 +28,7 @@ from inappropriately learning about agents that they have not sensed directly."
            (let [neighs 
                  (mapv #(relativize-position % (:position obj));; positions are relative to the agent
                        (filterv #(and (not (= (:id obj) (:id %)))
-                                      (<= (length (mapv - (:position obj) (:position %)))
+                                      (<= (distance (:position obj) (:position %))
                                           (:neighborhood-size @pucks-settings)))
                                 stripped))]
              (-> obj

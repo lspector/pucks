@@ -1,22 +1,16 @@
 ;; Pucks utilities for manipulating [x y] (2D) points and vectors.
 
 (ns pucks.vec2D
-  (:use pucks.globals))
-
-#_(defn distance 
-   "Returns the distance between two points."
-   [[x1 y1][x2 y2]]
-   (Math/sqrt (+ (* (- x1 x2) (- x1 x2))
-                 (* (- y1 y2) (- y1 y2)))))
+  (:use pucks.globals quil.core))
 
 (defn distance 
-  "Returns the distance between two points on a torroidal world."
+  "Returns the distance between two points on a toroidal world."
   ;; http://stackoverflow.com/questions/2123947/calculate-distance-between-two-x-y-coordinates
   ;; sqrt(min(|x1 - x2|, w - |x1 - x2|)^2 + min(|y1 - y2|, h - |y1-y2|)^2)
   [[x1 y1][x2 y2]]
   (let [wh (:screen-size @pucks-settings)]
-    (Math/sqrt (+ (#(* % %) (min (- x1 x2) (- wh (- x1 x2))))
-                  (#(* % %) (min (- x1 x2) (- wh (- x1 x2))))))))
+    (Math/sqrt (+ (#(* % %) (min (abs (- x1 x2)) (- wh (abs (- x1 x2)))))
+                  (#(* % %) (min (abs (- y1 y2)) (- wh (abs (- y1 y2)))))))))
 
 (defn length 
   "Returns the length of the [x y] vector."

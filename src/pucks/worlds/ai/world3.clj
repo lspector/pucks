@@ -20,14 +20,16 @@
     ;; horizontal internal
     (for [x (range 400 601 20)]
       (merge (stone) {:position [x 400]}))
-    ;; boundary on right
-    ;; top
+    ;; room on right
+    ;; top/bottom
     (for [x (range 400 800 20)]
       (merge (stone) {:position [x 0]}))
     (for [x (range 400 800 20)]
       (merge (stone) {:position [x 799]}))
     ;; side
     (for [y (range 0 801 20)]
+      (merge (stone) {:position [0 y]}))
+        (for [y (range 0 801 20)]
       (merge (stone) {:position [799 y]}))
     ;; zappers
     [(merge (zapper) {:position [200 600]})

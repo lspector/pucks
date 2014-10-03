@@ -18,8 +18,8 @@ neighbors and position removed."
                    #(assoc % :proposals 
                            ((:proposal-function %) 
                              (-> %
-                               (assoc :neighbors [])
-                               (relativize-position (:position %)))))
+                               (assoc :position [0 0])
+                               (assoc :neighbors []))))
                    pucks)))))
 
 (defn colliding?
