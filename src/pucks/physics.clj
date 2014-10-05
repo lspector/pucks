@@ -188,5 +188,5 @@ changes to the world."
                                                            0.1
                                                            0)))))
                                      (assoc :just-collided just-collided) ;; store collision for GUI
-                                     (assoc :memory (merge (:memory obj) (:memory proposals))))])))
+                                     (assoc :memory (:memory proposals)))])))
                       post-xfer-objs)))))))
