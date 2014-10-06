@@ -128,7 +128,7 @@ changes to the world."
                               proposed-v (+v velocity new-a)
                               new-v (if mobile (limit-vec2D proposed-v (/ (:max-velocity @pucks-settings) radius)) [0 0])
                               new-p (wrap-position (+v position new-v))
-                              proposed-r (:rotation proposals)
+                              proposed-r (if  (:rotation proposals) (wrap-rotation (:rotation proposals)) nil)
                               new-r (if (and mobile proposed-r)
                                       (wrap-rotation
                                         (let [max-rotational-velocity (:max-rotational-velocity @pucks-settings)]
@@ -188,5 +188,5 @@ changes to the world."
                                                            0.1
                                                            0)))))
                                      (assoc :just-collided just-collided) ;; store collision for GUI
-                                     (assoc :memory (:memory proposals)))])))
+                                     (assoc :memory (merge (:memory obj) (:memory proposals))))])))
                       post-xfer-objs)))))))
