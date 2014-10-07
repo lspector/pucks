@@ -49,17 +49,17 @@ position in a toroidal world."
            [(if (< (abs (- ax px)) ;; if true, within plane, if not, wrap
                    (min (+ ax (- sz px))
                         (+ px (- sz ax))))
-                (- ax px)
-                (if (> ax px)
-                  (- (+ px (- sz ax)))
-                  (+ ax (- sz px))))
-               (if (< (abs (- ay py)) ;; if true, within plane, if not, wrap
+              (- ax px)
+              (if (> ax px)
+                (- (+ px (- sz ax)))
+                (+ ax (- sz px))))
+            (if (< (abs (- ay py)) ;; if true, within plane, if not, wrap
                    (min (+ ay (- sz py))
                         (+ py (- sz ay))))
-                (- ay py)
-                (if (> ay py)
-                  (- (+ py (- sz ay)))
-                  (+ ay (- sz py))))])))
+              (- ay py)
+              (if (> ay py)
+                (- (+ py (- sz ay)))
+                (+ ay (- sz py))))])))
 
 (defn derelativize-position 
   "Returns agent but with its position augmented by reference-xy."
