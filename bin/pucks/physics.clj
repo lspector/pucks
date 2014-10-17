@@ -19,7 +19,8 @@ neighbors and position removed."
                            ((:proposal-function %) 
                              (-> %
                                (assoc :position [0 0])
-                               (assoc :neighbors []))))
+                               (assoc :neighbors [])
+                               (assoc :memory {}))))
                    pucks)))))
 
 (defn colliding?
