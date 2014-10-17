@@ -1,3 +1,3 @@
-# Introduction to pucks
+# Pucks documentation
 
-TODO: write [great documentation](http://jacobian.org/writing/great-documentation/what-to-write/)
+All of the pucks documentation is currently in the [ReadMe file] (https://github.com/lspector/pucks/blob/master/README.md).
