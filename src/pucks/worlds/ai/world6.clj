@@ -20,7 +20,12 @@
     (for [y (range 300 501 20)]
       (merge (stone) {:position [700 y]}))
     ;; gate
-    [(merge (gate) {:position [500 400]})]))
+    [(merge (gate) {:position [500 400]})]
+    ;; user
+    [(merge (user) {:position [100 400]
+                    :rotation half-pi
+                    :velocity [1.0 0]})]
+    ))
 
 (defn settings []
   {})

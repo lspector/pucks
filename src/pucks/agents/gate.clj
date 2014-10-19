@@ -16,12 +16,12 @@
     (fill r g b 
           (if (pos? (:close-in (:memory p)))
             16
-            (+ 64 (* 128 (/ (+ 1 (Math/sin (/ @iteration two-pi))) 2)))))
+            (+ 128 (* 128 (/ (+ 1 (Math/sin (/ @iteration two-pi))) 2)))))
     (ellipse 0 0 radius radius)
     ;; membrane
     (fill r g b 
           (if (pos? (:close-in (:memory p)))
-            (+ 16 (* 32 (/ (+ 1 (Math/sin (/ @iteration two-pi))) 2)))
+            (+ 16 (* 16 (/ (+ 1 (Math/sin (/ @iteration two-pi))) 2)))
             16))
     (ellipse 0 0 (* radius 2) (* radius 2))
     (pop-matrix)))
@@ -32,7 +32,8 @@
                          :other (:id other)
                          :bid {:memory {:close-in 100}}
                          :ask {:inventory :key}}))
-  :memory {:close-in (dec (:close-in (:memory p)))}})
+  :memory {:close-in (dec (:close-in (:memory p)))}
+  :properties {:solid (not (pos? (:close-in (:memory p))))}})
 
 (defn gate []
   (merge (generic)

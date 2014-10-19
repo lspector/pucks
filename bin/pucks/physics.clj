@@ -29,6 +29,15 @@ neighbors and position removed."
      (+ (/ (:radius self) 2)
         (/ (:radius neighbor) 2))))
 
+(defn update-properties
+  "Returns the given puck with the allowed property changes specified
+in properties-proposals."
+  [puck properties-proposals]
+  (if (and (not (:mobile puck))
+           (some #{:solid} (keys properties-proposals)))
+    (assoc puck :solid (:solid properties-proposals))
+    puck))
+
 (defn arbitrate-proposals
   "Processes all of the proposals of all of the agents and makes appropriate
 changes to the world."
@@ -108,25 +117,35 @@ changes to the world."
         (vec (apply concat
                     (pmapallv ;; do this concurrently if not in single-thread mode
                       (fn [{:keys [position velocity rotation neighbors proposals mobile energy radius] :as obj}]
-                        (let [proposed-a (*v (or (:acceleration proposals) 0) 
+                        
+                        (let [colliding-neighbors (filter #(and (:solid %)
+                                                                (colliding? obj %))
+                                                          neighbors)
+                              proposed-a (*v (or (:acceleration proposals) 0) 
                                              (rotation->direction rotation)) ;; vec from proposed scalar * rotation
                               anti-collision-a (if mobile
-                                                 (let [colliding-neighbors (filter #(and (:solid %)
-                                                                                         (colliding? obj %))
-                                                                                   neighbors)]
-                                                   (if (empty? colliding-neighbors)
-                                                     [0 0]
-                                                     (*v (:collision-resolution-acceleration @pucks-settings)
-                                                         (apply avgv 
-                                                                (mapv -v (mapv :position
-                                                                               colliding-neighbors))))))
+                                                 (if (empty? colliding-neighbors)
+                                                   [0 0]
+                                                   (*v (:collision-resolution-acceleration @pucks-settings)
+                                                       (apply avgv 
+                                                              (mapv -v (mapv :position
+                                                                             colliding-neighbors)))))
                                                  [0 0])
                               just-collided (not (zero? (length anti-collision-a)))
                               new-a (limit-vec2D (+v proposed-a anti-collision-a) 
                                                  (* (if just-collided 10 1)
                                                     (:max-acceleration @pucks-settings)))
                               proposed-v (+v velocity new-a)
-                              new-v (if mobile (limit-vec2D proposed-v (/ (:max-velocity @pucks-settings) radius)) [0 0])
+                              new-v (if mobile 
+                                      (limit-vec2D proposed-v 
+                                                   (if just-collided
+                                                     (min (/ (:max-velocity @pucks-settings) radius)
+                                                          (length (apply +v 
+                                                                         (concat [velocity]
+                                                                                 (mapv :velocity
+                                                                                       colliding-neighbors)))))
+                                                     (/ (:max-velocity @pucks-settings) radius)))
+                                      [0 0])
                               new-p (wrap-position (+v position new-v))
                               proposed-r (if  (:rotation proposals) (wrap-rotation (:rotation proposals)) nil)
                               new-r (if (and mobile proposed-r)
@@ -188,5 +207,6 @@ changes to the world."
                                                            0.1
                                                            0)))))
                                      (assoc :just-collided just-collided) ;; store collision for GUI
-                                     (assoc :memory (merge (:memory obj) (:memory proposals))))])))
+                                     (assoc :memory (merge (:memory obj) (:memory proposals)))
+                                     (update-properties (:properties proposals)))])))
                       post-xfer-objs)))))))
