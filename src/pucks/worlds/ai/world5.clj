@@ -36,7 +36,7 @@
     [(merge (zapper) {:position [200 600]})
      (merge (zapper) {:position [600 200]})]
     [(merge (vent) {:position [600 600]})]
-    ;; fast shooter nursery
+    ;; darter nursery
     [(merge (nursery darter) 
             {:position [200 200]})]))
 

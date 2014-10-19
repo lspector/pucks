@@ -9,14 +9,19 @@
 within sensor range."
   (assoc p
          :sensed 
-         (filter #(and (let [angular-difference ;; in front of me
-                             (Math/abs (- (:rotation p) 
-                                          (direction->rotation (:position %))))]
-                         (or (<= angular-difference half-pi)
-                             (>= angular-difference (+ pi half-pi)))) 
-                       (<= (- (length (:position %)) (:radius %)) ;; within range
-                           (:sensor-range @pucks-settings)))
-                 (:neighbors p))))
+         (mapv #(-> % ;; strip features that can't be sensed
+                  (assoc :neighbors [])
+                  (assoc :overlaps [])
+                  (assoc :memory {})
+                  (assoc :inventory #{}))
+               (filterv #(and (let [angular-difference ;; in front of me
+                                    (Math/abs (- (:rotation p) 
+                                                 (direction->rotation (:position %))))]
+                                (or (<= angular-difference half-pi)
+                                    (>= angular-difference (+ pi half-pi)))) 
+                              (<= (- (length (:position %)) (:radius %)) ;; within range
+                                  (:sensor-range @pucks-settings)))
+                       (:neighbors p)))))
 
 (defn run-sensors
   "Annotates all agents with the other agents that they can sense, as the value

@@ -21,8 +21,7 @@
      :rotation (if (= direction :left)
                  leftmost
                  rightmost)
-     :memory (merge (:memory p)
-                    {:turning direction})}))
+     :memory {:turning direction}}))
 
 (defn zigzag []
   (merge (active)
