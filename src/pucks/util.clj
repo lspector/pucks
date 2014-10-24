@@ -92,6 +92,16 @@ to (:screen-size @pucks-settings) (exclusive)."
   (do (println v)
     v))
 
+(defn abbreviate-embedded-agents
+  "Replaces embedded agents with {:abbrev (:id agent)}. This is indended
+for use in printing agents, to keep the printed form readible and of reasonable
+size."
+  [a]
+  (-> a
+    (assoc :neighbors (mapv #(do {:abbrev (:id %)}) (:neighbors a)))
+    (dissoc :sensed (mapv #(do {:abbrev (:id %)}) (:sensed a)))
+    (dissoc :overlaps (mapv #(do {:abbrev (:id %)}) (:overlaps a)))))
+
 (defn print-stats []
   "Prints a statistics about the state of the world."
   (println "World objects:" (count @all-agents))

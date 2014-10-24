@@ -46,7 +46,8 @@ GUI interactions."
              ;; avoid triggering multiple times for one click
              (> (ms) (+ 500 @last-input-ms)))
     (reset! last-input-ms (ms))
-    (pprint (objects-overlapping-xy (mouse-x) (mouse-y)))
+    (pprint (mapv abbreviate-embedded-agents
+                  (objects-overlapping-xy (mouse-x) (mouse-y))))
     (inspect-tree (objects-overlapping-xy (mouse-x) (mouse-y)))))
 
 (defn run-pucks [agents settings]
