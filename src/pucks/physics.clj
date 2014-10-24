@@ -88,7 +88,12 @@ in properties-proposals."
     (assoc self (without (self obj-map) bid))
     (assoc other (with (other obj-map) bid))))
 
-
+(defn all-pairs [v]
+  (if (< (count v) 3)
+    [v]
+    (vec (for [item1 v item2 v :when (not= item1 item2)]
+           [item1 item2]))))
+               
 
 (defn arbitrate-proposals
   "Processes all of the proposals of all of the agents and makes appropriate
@@ -113,16 +118,17 @@ changes to the world."
                                    (mapv :proposals objs)))
             grouped-by-one-sided (group-by one-sided transfers)
             transactions (loop [remaining (get grouped-by-one-sided false)
-                                result (mapv vec (get grouped-by-one-sided true))]
+                                result (mapv vector (get grouped-by-one-sided true))]
                            (if (empty? remaining)
                              (shuffle result)
                              (recur (filter #(not (affects-same-agents? 
                                                     % (first remaining)))
                                             remaining)
-                                    (conj result 
-                                          (filterv #(affects-same-agents? 
-                                                      % (first remaining))
-                                                   remaining)))))
+                                    (concat result 
+                                           (all-pairs 
+                                             (filterv #(affects-same-agents? 
+                                                         % (first remaining))
+                                                      remaining))))))
             post-xfer-objs (loop [remaining transactions
                                   obj-map (zipmap (map :id objs) objs)]
                              (if (empty? remaining)
@@ -144,7 +150,7 @@ changes to the world."
                                                                     (:energy (:ask xfer1)))))))
                                      (recur (rest remaining)
                                             obj-map))
-                                   (if (empty? (rest transaction)) 
+                                   (if (one-sided xfer1)
                                      ;; vent and other one-sided
                                      (recur (rest remaining)
                                             (if (can-afford self (:bid xfer1))
@@ -154,25 +160,27 @@ changes to the world."
                                                 (assoc self-id (without self (:bid xfer1)))
                                                 (assoc other-id (with other (:bid xfer1))))
                                               obj-map))
-                                     ;; other transactions
-                                     ;; assume just two transfers
-                                     (let [xfer2 (second transaction)]
-                                       (if (and (= (:self-id xfer1) (:other-id xfer2)) ;; participants are symmetric
-                                                (= (:self-id xfer2) (:other-id xfer1))
-                                                (can-afford self (:bid xfer1))
-                                                (can-afford other (:bid xfer2))
-                                                ;; an ask can be a funcion of two bids, or it can be a map, 
-                                                ;; in which case it is satisfied if it is = to the other agent's bid
-                                                (acceptable (:ask xfer1) (:bid xfer1) (:bid xfer2))
-                                                (acceptable (:ask xfer2) (:bid xfer2) (:bid xfer1)))
-                                         ;; if both asks are happy then both bids are processed
-                                         ;; there may be system loss, but should not be system gain
-                                         (recur (rest remaining)
-                                                (->> obj-map 
-                                                  (process-bid xfer1)
-                                                  (process-bid xfer2)))
-                                         ;; otherwise
-                                         (recur (rest remaining) obj-map))))))))]
+                                     (if (empty? (rest transaction)) ;; incomplete
+                                       (recur (rest remaining)
+                                              obj-map)
+                                       ;; other transactions
+                                       (let [xfer2 (second transaction)]
+                                         (if (and (= (:self-id xfer1) (:other-id xfer2)) ;; participants are symmetric
+                                                  (= (:self-id xfer2) (:other-id xfer1))
+                                                  (can-afford self (:bid xfer1))
+                                                  (can-afford other (:bid xfer2))
+                                                  ;; an ask can be a funcion of two bids, or it can be a map, 
+                                                  ;; in which case it is satisfied if it is = to the other agent's bid
+                                                  (acceptable (:ask xfer1) (:bid xfer1) (:bid xfer2))
+                                                  (acceptable (:ask xfer2) (:bid xfer2) (:bid xfer1)))
+                                           ;; if both asks are happy then both bids are processed
+                                           ;; there may be system loss, but should not be system gain
+                                           (recur (rest remaining)
+                                                  (->> obj-map 
+                                                    (process-bid xfer1)
+                                                    (process-bid xfer2)))
+                                           ;; otherwise
+                                           (recur (rest remaining) obj-map)))))))))]
         ;; The world after all transactions have been conducted is now in post-xfer-objs.
         ;; Now we can process all other proposals for agents taken individually. 
         (vec (apply concat

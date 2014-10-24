@@ -3,7 +3,7 @@
 
 (ns pucks.worlds.dev.world7
   (:use [pucks core globals]
-        [pucks.agents stone vent user gate opener]))
+        [pucks.agents stone vent user gate opener chest]))
 
 (defn agents []
   (concat 
@@ -22,10 +22,16 @@
       (merge (stone) {:position [700 y]}))
     ;; gate
     [(merge (gate) {:position [500 400]})]
-    ;; user
+    ;; chest with key
+    [(merge (chest) {:position [250 430]
+                     :inventory #{:key}})]
+    ;; opener
     [(merge (opener) {:position [100 400]
                       :rotation half-pi
                       :velocity [1.0 0]})]
+    ;; vent
+    [(merge (vent) {:position [600 430]
+                    :radius 30})]
     ))
 
 (defn settings []
