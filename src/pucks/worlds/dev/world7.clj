@@ -3,7 +3,7 @@
 
 (ns pucks.worlds.dev.world7
   (:use [pucks core globals]
-        [pucks.agents stone vent user gate opener chest]))
+        [pucks.agents stone vent gate opener chest]))
 
 (defn agents []
   (concat 

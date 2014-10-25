@@ -208,11 +208,12 @@ changes to the world."
                               new-v (if mobile 
                                       (limit-vec2D proposed-v 
                                                    (if just-collided
-                                                     (min (/ (:max-velocity @pucks-settings) radius)
-                                                          (length (apply +v 
-                                                                         (concat [velocity]
-                                                                                 (mapv :velocity
-                                                                                       colliding-neighbors)))))
+                                                     (max 0.5
+                                                          (min (/ (:max-velocity @pucks-settings) radius)
+                                                               (length (apply +v 
+                                                                              (concat [velocity]
+                                                                                      (mapv :velocity
+                                                                                            colliding-neighbors))))))
                                                      (/ (:max-velocity @pucks-settings) radius)))
                                       [0 0])
                               new-p (wrap-position (+v position new-v))
