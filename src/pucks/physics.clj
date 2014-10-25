@@ -64,6 +64,7 @@ in properties-proposals."
                         :energy (- (:energy result) v)
                         :inventory (remove #{v} (:inventory result))
                         :promise (merge (:promise result) v)
+                        :memory (:memory result)
                         nil)))))))
 
 (defn with [obj resource-map]
@@ -78,6 +79,7 @@ in properties-proposals."
                       (case k
                         :energy (min 1.0 (+ (:energy result) v))
                         :inventory (conj (:inventory result) v)
+                        :memory (merge (:memory result) v)
                         nil)))))))
 
 (defn process-bid
