@@ -137,11 +137,12 @@ Key | Value | Condition | Payment
 :energy | a number | the bidding puck must have at least the specified amount of energy | the specified amount of energy is transferred to the other puck
 :inventory | an inventory item | the specified item must be present in the bidding puck's inventory | the specified item is removed from the inventory of the bidding puck and added to the inventory of the other puck
 :memory | a map (presumably containing key/value pairs from the bidding puck's memory)| none | the specified map is merged into the other puck's memory; nothing is removed from the bidding puck's memory
+:promise | a map | none | the specified map is merged into the bidding puck's memory (which will presumably influence its future bids)
+:request | anything | none | nothing; this serves only to communicate an interest in the transfer proceeding
 
+Each step of a pucks simulation, the transactions that have proposed in that step are processed one at a time, in random order.
 
-see details below), and :bid (the value of which must be a map with resources such as :energy as keys, and offered amounts or items as values). If an ask is a map then it must have resources as keys, and requested amounts or items as corresponding values; such an ask will be satisfied only if it is paired with a transfer that has an exactly matching bid. If an ask is a function then it will be called on two arguments, the bid of the same transfer and the bid of
-
-random order
+The pucks transfer system is still under development and will continue to change.
 
 ## Worlds
 
