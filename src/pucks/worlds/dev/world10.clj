@@ -1,9 +1,9 @@
 
 ;; A pucks world.
 
-(ns pucks.worlds.ai.world5
+(ns pucks.worlds.dev.world10
   (:use [pucks core globals]
-        [pucks.agents stone vent zapper user beacon nursery darter]))
+        [pucks.agents stone vent zapper beacon nursery darter]))
 
 (defn agents []
   (concat 

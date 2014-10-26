@@ -1,9 +1,9 @@
 
 ;; A pucks world.
 
-(ns pucks.worlds.ai.world4
+(ns pucks.worlds.dev.world9
   (:use [pucks core globals]
-        [pucks.agents stone vent zapper user beacon nursery shooter]))
+        [pucks.agents stone vent zapper beacon nursery shooter]))
 
 (defn agents []
   (concat 
@@ -36,7 +36,7 @@
     [(merge (zapper) {:position [200 600]})
      (merge (zapper) {:position [600 200]})]
     [(merge (vent) {:position [600 600]})]
-    ;; fast shooter nursery
+    ;; shooter nursery
     [(merge (nursery shooter) 
             {:position [200 200]})]))
 
