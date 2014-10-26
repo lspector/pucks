@@ -18,7 +18,7 @@
                        :other (:id gate)
                        :bid {:inventory :key}
                        :ask (fn [my-bid your-bid]
-                              (when-let [open-promise (:open (:memory (:promise your-bid)))]
+                              (when-let [open-promise (:open (:promise your-bid))]
                                 (pos? open-promise)))})))})
 
 (defn opener []

@@ -108,10 +108,40 @@ Key | Value
 :acceleration | a floating-point number indicating the target acceleration, which may be limited by settings for :max-acceleration and :max-velocity
 :rotation | a floating-point number indicating the target rotation, which may be limited by the setting of :max-rotational-velocity
 :spawn | a sequence of pucks that are potential offspring *(not yet fully implemented)*
-:transfer | a sequence of transactions; a transaction is a map with four key/value pairs: :self (the value of which should be a puck ID), :other (the value of which should be a puck ID), :ask (the value of which should be a map with resources such as :energy as keys, and requested amounts as values), and :bid (the value of which should be a map with resources such as :energy as keys, and offered amounts as values); *the transaction specification is still under development*
+:transfer | a sequence of proposed transfers between pucks, each of which must be a map with four key/value pairs: :self, :other, :bid, and :ask. See below for details.
 :memory | a map of any keys to any values
+:properties | a map of puck property keys to values; currently only changes to the :solid property are supported, and only for pucks that are not :mobile
 
-Proposal functions may refer to any elements of the pucks that they received, although the :neighbors of those pucks will have been stripped and replaced with empty sequences, and the :positions of those pucks will have been stripped and replaced with \[0 0\]. Positions of offspring pucks specified in :spawn proposals will be interpreted relative to the positions of the parent pucks.
+Proposal functions may refer to any elements of the pucks that they receive, although the :neighbors, :overlaps, :memory, and :inventory of those pucks will have been stripped, and the :positions of those pucks will have been relativized to the position of the puck making the proposal. Positions of offspring pucks specified in :spawn proposals will be interpreted relative to the positions of the parent pucks.
+
+### Transfers
+
+A transfer is a map with four key/value pairs: 
+
+Key | Value
+|---|---|
+:self | a puck ID
+:other | a puck ID
+:bid | a map with resources such as :energy or :inventory as keys, and offered amounts or items as values
+:ask | either a map of the same format as a bid, or a function of two bids
+
+Transfers are used to establish *transactions* among agents.
+A transfer is considered *one-sided* if it requires no reciprocation from a second agent; this will rarely be the case for user-written agents, but it is the mechanism by which "vents" transfer energy unconditionally to overlapping agents, and by which "zappers" transfer energy unconditionally *from* overlapping agents.
+
+Most other transfers will be *two-sided*, meaning that transfers proposed by two agents must be mutually acceptable (and each agent must be able to afford its bid) in order for the transaction specified by the two transfers to take place. Each agent will accept a transaction if its ask is compatible with the bid of the other agent. If an ask is map then the transaction will be accepted only if it matches the other agent's bid exactly. If an ask is a function then it will be called on two arguments, the bid made by the agent evaluating the ask and the bid made by the other agent; if the function call returns true then the transaction will be accepted.
+
+When a transaction takes place all bids are "paid," which will mean something different depending on the resource involved in the bid. Among the bids that can be made are:
+
+Key | Value | Condition | Payment
+|---|---|---|---|
+:energy | a number | the bidding puck must have at least the specified amount of energy | the specified amount of energy is transferred to the other puck
+:inventory | an inventory item | the specified item must be present in the bidding puck's inventory | the specified item is removed from the inventory of the bidding puck and added to the inventory of the other puck
+:memory | a map (presumably containing key/value pairs from the bidding puck's memory)| none | the specified map is merged into the other puck's memory; nothing is removed from the bidding puck's memory
+
+
+see details below), and :bid (the value of which must be a map with resources such as :energy as keys, and offered amounts or items as values). If an ask is a map then it must have resources as keys, and requested amounts or items as corresponding values; such an ask will be satisfied only if it is paired with a transfer that has an exactly matching bid. If an ask is a function then it will be called on two arguments, the bid of the same transfer and the bid of
+
+random order
 
 ## Worlds
 

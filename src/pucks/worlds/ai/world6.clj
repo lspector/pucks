@@ -2,10 +2,15 @@
 
 (ns pucks.worlds.ai.world6
   (:use [pucks core globals]
-        [pucks.agents stone vent user gate]))
+        [pucks.agents beacon stone vent gate zapper nursery user chest]))
 
 (defn agents []
   (concat 
+    ;; beacons
+    (for [x (range 100 701 200)
+          y (range 100 701 200)]
+      (merge (beacon) {:position [x y]
+                       :id [x y]}))
     ;; walls
     ;; horizontal
     (for [x (range 500 701 20)
@@ -21,10 +26,17 @@
       (merge (stone) {:position [700 y]}))
     ;; gate
     [(merge (gate) {:position [500 400]})]
-    ;; user
-    [(merge (user) {:position [100 400]
-                    :rotation half-pi
-                    :velocity [1.0 0]})]
+    ;; chest with key
+    [(merge (chest) {:position [250 430]
+                     :inventory #{:key}})]
+    ;; vent
+    [(merge (vent) {:position [600 430]
+                    :radius 30})]
+    ;; zappers
+    [(merge (zapper) {:position [200 600]})
+     (merge (zapper) {:position [600 200]})]
+    ;; user nursery
+    [(merge (nursery user) {:position [200 200]})]
     ))
 
 (defn settings []

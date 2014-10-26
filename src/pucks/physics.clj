@@ -133,7 +133,7 @@ changes to the world."
     all-agents       
     (fn [agents]
       ;; First we collect and process all proposed transfers. Each 
-      ;; "transaction" here is a vector of all proposed transfers between
+      ;; "transaction" here is a vector one transfer or two transfers between
       ;; the same pair of agents. Transactions are processed one at a time 
       ;; in random order. Each is accepted if the source would not be 
       ;; depeleted and no other constaints would be violated.
@@ -184,7 +184,7 @@ changes to the world."
                                                   (assoc self-id (without self (:bid xfer1)))
                                                   (assoc other-id (with other (:bid xfer1))))
                                                 agent-map))
-                                       (if (empty? (rest transaction)) ;; incomplete
+                                       (if (empty? (rest transaction)) ;; no partner; skip
                                          (recur (rest remaining)
                                                 agent-map)
                                          ;; other transactions
@@ -303,7 +303,7 @@ changes to the world."
                                              (assoc :just-collided just-collided) ;; store collision for GUI
                                              (assoc :memory (merge (:memory agent) 
                                                                    (:memory proposals) 
-                                                                   (:memory (:promise agent))))
+                                                                   (:promise agent)))
                                              (dissoc :promise)
                                              (update-properties (:properties proposals)))])))
                               post-xfer-agents)))))))

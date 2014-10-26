@@ -34,6 +34,7 @@
     ;; zappers
     [(merge (zapper) {:position [200 600]})
      (merge (zapper) {:position [600 200]})]
+    ;; vent
     [(merge (vent) {:position [600 600]})]
     ;; user nursery
     [(merge (nursery user) {:position [200 200]})]))

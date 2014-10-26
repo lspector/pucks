@@ -41,7 +41,7 @@
  {:transfer (into [] (for [other (filter :mobile (:overlaps p))]
                         {:self (:id p)
                          :other (:id other)
-                         :bid {:promise {:memory {:open 100}}}
+                         :bid {:promise {:open 100}}
                          :ask {:inventory :key}}))
   :memory {:open (dec (:open (:memory p)))}
   :properties {:solid (not (pos? (:open (:memory p))))}})
