@@ -25,7 +25,7 @@ from inappropriately learning about agents that they have not sensed directly."
      (let [stripped (mapv strip-embedded-agents objs)]
        (pmapallv ;; do this concurrently if not in single-thread-mode
          (fn [obj]
-           (if (:stone obj) ;; stones don't need neighbors
+           (if (or (:stone obj) (:beacon obj));; stones and beacons don't need neighbors
              obj
              (let [neighs 
                    (mapv #(relativize-position % (:position obj));; positions are relative to the agent
