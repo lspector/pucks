@@ -123,3 +123,10 @@ multicore processor utilization, and 4) takes only one coll so far."
            (dorun (map #(send % f) agents))
            (apply await agents)
            (doall (map deref agents))))))
+
+(defn remove-one
+  "Returns sequence s without the first instance of item."
+  [item s]
+  (let [[without-item with-item] (split-with #(not (= item %)) s)]
+    (concat without-item (rest with-item))))
+

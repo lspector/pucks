@@ -70,7 +70,7 @@ If it is not a map then it should be a function of two arguments (bids)."
                       k
                       (case k
                         :energy (- (:energy result) v)
-                        :inventory (remove #{v} (:inventory result))
+                        :inventory (remove-one v (:inventory result))
                         :promise (merge (:promise result) v)
                         :memory (:memory result)
                         nil)))))))

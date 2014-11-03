@@ -11,11 +11,11 @@
    (merge (zigzag) ;; zigzag has memory
           {:position [200 400]
            :velocity [2 0]
-           :inventory #{:cheese}})
+           :inventory [:cheese]})
    (merge (startstop)
        {:position [600 400]
         :velocity [2 0]
-        :inventory #{:cheese}})])
+        :inventory [:cheese]})])
 
 (defn settings []
   {})

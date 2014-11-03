@@ -14,5 +14,6 @@
 (defn donor [item]
   (merge (active)
          {:donor true
-          :inventory #{item}
-          :proposal-function #(donor-proposals % item)}))
+          :inventory [item]
+          :proposal-function #(donor-proposals % item)
+          :color [255 0 0]}))

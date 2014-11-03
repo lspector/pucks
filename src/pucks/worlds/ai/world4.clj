@@ -29,7 +29,7 @@
     [(merge (gate) {:position [500 400]})]
     ;; chest with key
     [(merge (chest) {:position [250 430]
-                     :inventory #{:key}})]
+                     :inventory [:key]})]
     ;; vent
     [(merge (vent) {:position [600 430]
                     :radius 30})]

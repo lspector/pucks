@@ -13,7 +13,7 @@ within sensor range."
                   (assoc :neighbors [])
                   (assoc :overlaps [])
                   (assoc :memory {})
-                  (assoc :inventory #{}))
+                  (assoc :inventory []))
                (filterv #(and (let [angular-difference ;; in front of me
                                     (Math/abs (- (:rotation p) 
                                                  (direction->rotation (:position %))))]

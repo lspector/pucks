@@ -8,7 +8,7 @@
   (concat (repeatedly 10 stone)
           (repeatedly 10 vent)
           (repeatedly 5 zapper)
-          [(nursery #(merge (linear) {:inventory #{:something}}))]
+          [(nursery #(merge (linear) {:inventory [:something]}))]
           [(nursery #(merge (swarmer) {:memory {:something :rembered}}))]
           [(nursery #(if (zero? (rand-int 2)) (linear) (shooter)))]
           [(nursery swarmer)]

@@ -24,7 +24,7 @@
     [(merge (gate) {:position [500 400]})]
     ;; chest with key
     [(merge (chest) {:position [250 430]
-                     :inventory #{:key}})]
+                     :inventory [:key]})]
     ;; opener
     [(merge (opener) {:position [100 400]
                       :rotation half-pi

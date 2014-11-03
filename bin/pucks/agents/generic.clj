@@ -21,7 +21,7 @@
    :neighbors []
    :overlaps []
    :memory {}
-   :inventory #{}
+   :inventory []
    :draw-function (fn [p] false)
    :proposal-function (fn [p] {})
    :spawn-function (fn [p] [])})

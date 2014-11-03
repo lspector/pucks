@@ -8,7 +8,7 @@
   [(merge (linear) {:position [100 400]
                     :rotation half-pi
                     :velocity [2 0]
-                    :inventory #{:thing}
+                    :inventory [:thing]
                     :proposal-function 
                     (fn [p]
                         {:acceleration 0
