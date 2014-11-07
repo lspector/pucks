@@ -16,6 +16,7 @@
 
 (def pucks-settings
   (atom {:screen-size 800
+         :scale 1.0
          :neighborhood-size 200 ;; should be at least the sensor range + largest radius
          :sensor-range 100
          :single-thread-mode true

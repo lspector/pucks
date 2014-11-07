@@ -55,11 +55,13 @@ GUI interactions."
 be merged with the defaults)."
   (reset! all-agents agents)
   (swap! pucks-settings #(merge % settings))
-  (sketch
-      :title "pucks"
-      :setup setup
-      :draw draw
-      :size [(:screen-size @pucks-settings) (:screen-size @pucks-settings)]))
+  (let [scaled-screen-size (* (:scale @pucks-settings) 
+                              (:screen-size @pucks-settings))]
+        (sketch
+          :title "pucks"
+          :setup setup
+          :draw draw
+          :size [scaled-screen-size scaled-screen-size])))
 
 (defn -main 
   "This main function allows simulations to be run from the command line with:
