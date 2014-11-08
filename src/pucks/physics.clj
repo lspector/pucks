@@ -275,12 +275,16 @@ changes to the world."
                                                     (derelativize-position 
                                                       position
                                                       (merge proposed-puck
-                                                             {:id (gensym "puck-")
-                                                              :energy (if (:nursery agent) 1.0 0.1)
-                                                              :steps 0
-                                                              :memory {}
-                                                              :inventory []
-                                                              :sensed []})))
+                                                             (if (:nursery agent)
+                                                               {:id (gensym "puck-")
+                                                                :energy 1.0
+                                                                :steps 0}
+                                                               {:id (gensym "puck-")
+                                                                :energy 0.1
+                                                                :steps 0
+                                                                :memory {}
+                                                                :inventory []
+                                                                :sensed []}))))
                                                   (:spawn proposals))
                                             [])
                                           (if (and (:fire-torpedo proposals)
