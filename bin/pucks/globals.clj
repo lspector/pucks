@@ -12,6 +12,8 @@
 
 (def paused (atom false))    ;; true if the simulation is paused
 
+(def number-of-active-agents (atom 0)) ;; the current number of active agents
+
 ;; simulation parameters
 
 (def pucks-settings
@@ -25,7 +27,8 @@
          :max-rotational-velocity 0.05
          :collision-resolution-acceleration 100.0
          :cost-of-living 0.001
-         :cost-of-collision 0.01}))
+         :cost-of-collision 0.01
+         :nursery-threshold 1000}))
 
 ;; handy constants
 

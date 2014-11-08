@@ -20,7 +20,8 @@
     (pop-matrix)))
 
 (defn nursery-proposals [p]
-  (if (zero? (rand-int 50))
+  (if (and (< @number-of-active-agents (:nursery-threshold @pucks-settings))
+           (zero? (rand-int 50)))
     {:spawn [(assoc ((:spawn-function p))
                     ;; position will be relative to position of parent
                     :position [(- (rand-int 3) 1) (- (rand-int 3) 1)])]}

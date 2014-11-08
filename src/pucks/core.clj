@@ -28,6 +28,8 @@ GUI interactions."
     (swap! iteration inc) ;; increment the global interation counter
     (swap! all-agents     ;; update step clocks in agents
            (fn [objs] (mapv #(assoc % :steps (inc (:steps %))) objs))) 
+    (reset! number-of-active-agents
+            (count (filter :active @all-agents))) ;; track # of active agents
     (update-neighbors)    ;; update the neighbors in all agents
     (run-sensors)         ;; augment each agent with sensed objects
     (generate-proposals)  ;; generate proposals from each agent

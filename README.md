@@ -154,7 +154,8 @@ The following simulation settings are set in src/pucks/globals.clj and can be re
 
 Setting | Description | Default
 |---|---|---|
-:screen-size | the height and width of the screen in pixels | 800
+:screen-size | the height and width of the world in world units, and the screen in pixels if the :scale is 1.0 | 800
+:scale | the factor by which world units will be multiplied to yield numbers of pixels on screen; 1.0 will yield 1 unit/pixel, 0.5 will yield 2 units/pixel, etc. | 1.0 
 :sensor-range | the maximum distance from which a puck can sense another puck | 100
 :neighborhood-size | the distance from a puck within which other pucks will be considered for sensing, collision, and overlap-dependent interactions; this should be at least the sensor range plus the largest radius of any puck in the simulation | 200
 :max-velocity | the maximum distance that a puck with radius 1 can move in a single step; this is divided by the radius of a puck to determine its actual maximum velocity | 80
@@ -164,6 +165,7 @@ Setting | Description | Default
 :cost-of-living | the amount of energy charged to a puck just for living each time step | 0.001
 :cost-of-collision | the amount of energy charged to a puck for a collision | 0.01
 :single-thread-mode | if true then the simulation uses only a single thread and processor core; if false then it runs in a multi-threaded mode using all available cores | true
+:nursery-threshold | the number of active pucks below which nurseries may generate new pucks | 1000
 
 
 

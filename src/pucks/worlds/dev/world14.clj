@@ -12,6 +12,7 @@
 (defn settings []
   {:screen-size 2000
    :scale 0.4
-   :single-thread-mode false})
+   :single-thread-mode false
+   :nursery-threshold 10})
 
 ;(run-pucks (agents) (settings))
