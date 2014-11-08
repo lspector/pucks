@@ -1,6 +1,4 @@
-;; Neighbor maintenance for pucks. This is currently O(n^2) for n agents
-;; in the world. Faster methods are possible and should be considered for
-;; large simulations.
+;; Neighbor maintenance for pucks.
 
 (ns pucks.neighbors
   (:use pucks.globals pucks.util pucks.vec2D))
@@ -16,28 +14,65 @@ from inappropriately learning about agents that they have not sensed directly."
     (dissoc :sensed)
     (dissoc :overlaps)))
 
+(defn neighborhood-grid
+  "Returns a neighborhood grid containing all agents."
+  [agents]
+  (let [grid-size (inc (int (/ (:screen-size @pucks-settings)  
+                               (:neighborhood-size @pucks-settings))))]
+    (loop [grid (vec (repeat grid-size (vec (repeat grid-size []))))
+           remaining agents]
+      (if (empty? remaining)
+        grid
+        (recur (update-in grid 
+                          (mapv #(int (/ % (:neighborhood-size @pucks-settings))) 
+                                (:position (first remaining)))
+                          conj
+                          (first remaining))
+               (rest remaining))))))
+
+(defn get-neighboring-grid-spaces
+  "Returns a vector of the indices for the neighborhood grid where neighbors
+could be found."
+  [grid-size [x y]]
+  (vec (for [dx [-1 0 1]
+             dy [-1 0 1]]
+         [(mod (+ x dx) grid-size)
+          (mod (+ y dy) grid-size)])))
+
+(defn get-potential-neighbors
+  "Gets the potential neighbors of an agent."
+  [grid a]
+  (let [grid-size (count grid)]
+    (apply concat
+           (mapv #(get-in grid %)
+                 (get-neighboring-grid-spaces
+                   grid-size
+                   (mapv #(int (/ % (:neighborhood-size @pucks-settings))) 
+                         (:position a)))))))
+
 (defn update-neighbors
   "Annotates each agent in the simulation with :neighbors and :overlaps."
   []
   (swap! 
-   all-agents
-   (fn [objs]
-     (let [stripped (mapv strip-embedded-agents objs)]
-       (pmapallv ;; do this concurrently if not in single-thread-mode
-         (fn [obj]
-           (if (or (:stone obj) (:beacon obj));; stones and beacons don't need neighbors
-             obj
-             (let [neighs 
-                   (mapv #(relativize-position % (:position obj));; positions are relative to the agent
-                         (filterv #(and (not (= (:id obj) (:id %)))
-                                        (<= (distance (:position obj) (:position %))
-                                            (:neighborhood-size @pucks-settings)))
-                                  stripped))]
-               (-> obj
-                 (assoc :neighbors neighs)
-                 (assoc :overlaps
-                        (filterv #(<= (length (:position %))
-                                      (+ (:radius obj) (:radius %)))
-                                 neighs))))))
-         stripped)))))
+    all-agents
+    (fn [objs]
+      (let [stripped (mapv strip-embedded-agents objs)
+            grid (neighborhood-grid stripped)]
+        (pmapallv 
+          (fn [obj]
+            (if (or (:stone obj) (:beacon obj));; stones and beacons don't need neighbors
+              obj
+              (let [potential-neighs (get-potential-neighbors grid obj)
+                    neighs (mapv #(relativize-position % (:position obj));; positions are relative to the agent
+                                 (filterv #(and (not (= (:id obj) (:id %)))
+                                                (<= (distance (:position obj) (:position %))
+                                                    (:neighborhood-size @pucks-settings)))
+                                          potential-neighs))]
+                (-> obj
+                  (assoc :neighbors neighs)
+                  (assoc :overlaps
+                         (filterv #(<= (length (:position %))
+                                       (+ (:radius obj) (:radius %)))
+                                  neighs))))))
+          stripped)))))
 
