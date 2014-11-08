@@ -60,7 +60,9 @@ could be found."
             grid (neighborhood-grid stripped)]
         (pmapallv 
           (fn [obj]
-            (if (or (:stone obj) (:beacon obj));; stones and beacons don't need neighbors
+            (if (or (:stone obj) ;; these kinds of pucks don't need neighbors
+                    (:beacon obj)
+                    (:nursery obj))
               obj
               (let [potential-neighs (get-potential-neighbors grid obj)
                     neighs (mapv #(relativize-position % (:position obj));; positions are relative to the agent
@@ -75,4 +77,3 @@ could be found."
                                        (+ (:radius obj) (:radius %)))
                                   neighs))))))
           stripped)))))
-

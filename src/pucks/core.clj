@@ -46,9 +46,11 @@ GUI interactions."
              ;; avoid triggering multiple times for one click
              (> (ms) (+ 500 @last-input-ms)))
     (reset! last-input-ms (ms))
-    (pprint (mapv abbreviate-embedded-agents
-                  (objects-overlapping-xy (mouse-x) (mouse-y))))
-    (inspect-tree (objects-overlapping-xy (mouse-x) (mouse-y)))))
+    (let [scaled-x (int (/ (mouse-x) (:scale @pucks-settings)))
+          scaled-y (int (/ (mouse-y) (:scale @pucks-settings)))]
+      (pprint (mapv abbreviate-embedded-agents
+                    (objects-overlapping-xy scaled-x scaled-y)))
+      (inspect-tree (objects-overlapping-xy scaled-x scaled-y)))))
 
 (defn run-pucks [agents settings]
   "Run a pucks simulation with the provided agents and settings (which will
