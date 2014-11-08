@@ -209,8 +209,7 @@ changes to the world."
         ;; Now we can process all other proposals for agents taken individually. 
         (vec (apply concat
                     (pmapallv ;; do this concurrently if not in single-thread mode
-                              (fn [{:keys [position velocity rotation neighbors proposals mobile energy radius] :as agent}]
-                                
+                              (fn [{:keys [position velocity rotation neighbors proposals mobile energy radius] :as agent}]                                
                                 (let [colliding-neighbors (filter #(and (:solid %)
                                                                         (colliding? agent %))
                                                                   neighbors)
@@ -270,9 +269,20 @@ changes to the world."
                                                                      (+ (- rotation minus-pi)
                                                                         (- pi proposed-r)))))))
                                               rotation)]
-                                  (concat (or (mapv #(derelativize-position position %)
-                                                    (:spawn proposals))
-                                              [])
+                                  (concat (if (and (:spawn proposals)
+                                                   (> energy (+ 0.1 (* 0.1 (count (:spawn proposals))))))
+                                            (mapv (fn [proposed-puck]
+                                                    (derelativize-position 
+                                                      position
+                                                      (merge proposed-puck
+                                                             {:id (gensym "puck-")
+                                                              :energy (if (:nursery agent) 1.0 0.1)
+                                                              :steps 0
+                                                              :memory {}
+                                                              :inventory []
+                                                              :sensed []})))
+                                                  (:spawn proposals))
+                                            [])
                                           (if (and (:fire-torpedo proposals)
                                                    (> energy 0.1))
                                             [(derelativize-position 
@@ -299,6 +309,11 @@ changes to the world."
                                                                  (if (and (:fire-torpedo proposals)
                                                                           (> energy 0.1))
                                                                    0.1
+                                                                   0)
+                                                                 (if (and (:spawn proposals)
+                                                                          (not (:nursery agent))
+                                                                          (> energy (+ 0.1 (* 0.1 (count (:spawn proposals))))))
+                                                                   (* 0.1 (count (:spawn proposals)))
                                                                    0)))))
                                              (assoc :just-collided just-collided) ;; store collision for GUI
                                              (assoc :memory (merge (:memory agent) 
