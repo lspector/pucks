@@ -88,7 +88,7 @@ Key | Value | Default
 :inventory | items held by the agent | empty set
 :draw-function | a function that takes a puck and draws it to the screen | a function that draws nothing and returns false
 :proposal-function | a function that takes a puck and returns proposals in a map | a function that returns an empty map
-:spawn-function | a function that takes a puck and returns a sequence of pucks that are potential offspring | a function that returns an empty sequence
+:spawn-function | a function that takes either no arguments or a puck and returns a sequence of pucks that are potential offspring | a function that returns an empty sequence
    
 Pucks have additional key/value pairs that specify boolean properties of the puck. If the key is present with value **true** then the puck has that property. If it is either absent or present with value **false** then the puck does not have that property. The following are among the possible key/value pairs for boolean properties:
 
@@ -107,12 +107,12 @@ Key | Value
 |---|---|
 :acceleration | a floating-point number indicating the target acceleration, which may be limited by settings for :max-acceleration and :max-velocity
 :rotation | a floating-point number indicating the target rotation, which may be limited by the setting of :max-rotational-velocity
-:spawn | a sequence of pucks that are potential offspring *(not yet fully implemented)*
+:spawn | a sequence of pucks that are potential offspring *(still under development)*
 :transfer | a sequence of proposed transfers between pucks, each of which must be a map with four key/value pairs: :self, :other, :bid, and :ask. See below for details.
 :memory | a map of any keys to any values
 :properties | a map of puck property keys to values; currently only changes to the :solid property are supported, and only for pucks that are not :mobile
 
-Proposal functions may refer to any elements of the pucks that they receive, although the :neighbors, :overlaps, :memory, and :inventory of those pucks will have been stripped, and the :positions of those pucks will have been relativized to the position of the puck making the proposal. Positions of offspring pucks specified in :spawn proposals will be interpreted relative to the positions of the parent pucks.
+Proposal functions may refer to any elements of the pucks that they receive, although the :neighbors, :overlaps, :memory, and :inventory of those pucks will have been stripped, and the :positions of those pucks will have been relativized to the position of the puck making the proposal. Positions of offspring pucks specified in :spawn proposals will be interpreted relative to the positions of the parent pucks. Offspring will be given fresh ids, a small portion of the parent's energy, and empty memories and inventory, although subsequent transactions may transfer items or information from parent to child.
 
 ### Transfers
 
