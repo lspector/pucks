@@ -9,7 +9,9 @@
 
 (defn swarmevolver-proposals [p]
   {:acceleration 1
-   :properties {:color [(rand-int 256)(rand-int 256)(rand-int 256)]}
+   :properties {:color [(rand-int 256) (rand-int 256) (rand-int 256)]
+                :eye-color [(rand-int 256) (rand-int 256) (rand-int 256)]
+                :core-color [(rand-int 256) (rand-int 256) (rand-int 256)]}
    :rotation (direction->rotation 
               (+v (if (empty? (filter :mobile (:sensed p)))
                     (rotation->direction (:rotation p)) 

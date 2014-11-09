@@ -10,7 +10,7 @@
         radius (:radius p)
         [r g b] (:color p)
         [eye-r eye-g eye-b] (:eye-color p)
-        [core-r core-g core-b] [0 255 0]
+        [core-r core-g core-b] (:core-color p)
         core-diameter (* radius (:energy p))]
     (push-matrix)
     (translate x y)
@@ -51,7 +51,8 @@
   (merge (generic)
          {:mobile true
           :active true
-          :color [128, 255, 0]
-          :eye-color [255, 255, 0]
+          :color [128 255 0]
+          :eye-color [255 255 0]
+          :core-color [0 255 0]
           :draw-function draw-active}))
 

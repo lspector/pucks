@@ -110,7 +110,7 @@ Key | Value
 :spawn | a sequence of pucks that are potential offspring *(still under development)*
 :transfer | a sequence of proposed transfers between pucks, each of which must be a map with four key/value pairs: :self, :other, :bid, and :ask. See below for details.
 :memory | a map of any keys to any values
-:properties | a map of puck property keys to values; currently only changes to the :color and :solid properties are supported; all :color change proposals will be accepted, but :solid change proposals will be accepted only for pucks that are not :mobile
+:properties | a map of puck property keys to values; currently only changes to the :color, :eye-color, :core-color and :solid properties are supported; all color-related change proposals will be accepted, but :solid change proposals will be accepted only for pucks that are not :mobile
 
 Proposal functions may refer to any elements of the pucks that they receive, although the :neighbors, :overlaps, :memory, and :inventory of those pucks will have been stripped, and the :positions of those pucks will have been relativized to the position of the puck making the proposal. Positions of offspring pucks specified in :spawn proposals will be interpreted relative to the positions of the parent pucks. Offspring will be given fresh ids, a small portion of the parent's energy, and empty memories and inventory, although subsequent transactions may transfer items or information from parent to child.
 

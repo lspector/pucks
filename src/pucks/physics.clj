@@ -44,7 +44,11 @@ in properties-proposals."
                           (assoc p :solid v))
                         (rest remaining))
           :color (recur (assoc p :color v)
-                        (rest remaining)))))))
+                        (rest remaining))
+          :eye-color (recur (assoc p :eye-color v)
+                            (rest remaining))
+          :core-color (recur (assoc p :core-color v)
+                             (rest remaining)))))))
 
 (defn acceptable 
   "Returns a truthy value if the bids are acceptable to the ask, and false
