@@ -33,10 +33,18 @@ neighbors and position removed."
   "Returns the given puck with the allowed property changes specified
 in properties-proposals."
   [puck properties-proposals]
-  (if (and (not (:mobile puck))
-           (some #{:solid} (keys properties-proposals)))
-    (assoc puck :solid (:solid properties-proposals))
-    puck))
+  (loop [p puck
+         remaining properties-proposals]
+    (if (empty? remaining)
+      p
+      (let [[k v] (first remaining)]
+        (case k
+          :solid (recur (if (:mobile p)
+                          p
+                          (assoc p :solid v))
+                        (rest remaining))
+          :color (recur (assoc p :color v)
+                        (rest remaining)))))))
 
 (defn acceptable 
   "Returns a truthy value if the bids are acceptable to the ask, and false

@@ -1,21 +1,22 @@
-;; Definitions for swarmer agents.
+;; Definitions for swarmevolver agents.
 
-(ns pucks.agents.swarmer
+(ns pucks.agents.swarmevolver
   (:use [pucks globals util vec2D]
         pucks.agents.active))
 
 (defn rand-direction []
   (rotation->direction (- (rand two-pi) pi)))
 
-(defn swarmer-proposals [p]
+(defn swarmevolver-proposals [p]
   {:acceleration 1
+   :properties {:color [(rand-int 256)(rand-int 256)(rand-int 256)]}
    :rotation (direction->rotation 
               (+v (if (empty? (filter :mobile (:sensed p)))
                     (rotation->direction (:rotation p)) 
                     (apply avgv (map :velocity (filter :mobile (:sensed p)))))
                   (rand-direction)))})
 
-(defn swarmer []
+(defn swarmevolver []
   (merge (active)
-         {:swarmer true
-          :proposal-function swarmer-proposals}))
+         {:swarmevolver true
+          :proposal-function swarmevolver-proposals}))

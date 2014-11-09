@@ -19,6 +19,3 @@
   (merge (active)
          {:swarmer true
           :proposal-function swarmer-proposals}))
-
-
-
