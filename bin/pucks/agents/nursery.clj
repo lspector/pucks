@@ -17,6 +17,9 @@
     (ellipse 0 0 (* radius 2) (* radius 2))
     ;; core
     (ellipse 0 0 radius radius)
+    (fill 32 32 32 196)
+    (when (>= @number-of-active-agents (:nursery-threshold @pucks-settings))
+      (ellipse 0 0 (* 0.8 radius) (* 0.8 radius)))
     (pop-matrix)))
 
 (defn nursery-proposals [p]

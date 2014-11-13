@@ -79,6 +79,7 @@ Key | Value | Default
 :velocity | an [x y] vector representing the number of points that the puck is moving in the x and y directions each time step | each component is random between -2.5 and 2.5
 :rotation | a floating-point number indicating the puck's orientation, in radians rotating clockwise from straight up; 0 is straight up; pi/2 is to the right; pi is straight down; 3pi/2 is to the left | random between 0 and 2pi
 :color | a vector of integers, each between 0 and 255 (inclusive), for red, green, and blue | 255 for each component (which makes white)
+:core-color | a vector of integers, each between 0 and 255 (inclusive), for red, green, and blue | 255 for each component (which makes white)
 :energy | a floating-point number between 0 and 1 | 1
 :steps | the number of time steps that the agent has been alive | 0
 :neighbors | other pucks within the neighborhood of this puck; this information is not accessible by proposal functions | empty sequence
@@ -111,6 +112,7 @@ Key | Value
 :transfer | a sequence of proposed transfers between pucks, each of which must be a map with four key/value pairs: :self, :other, :bid, and :ask. See below for details.
 :memory | a map of any keys to any values
 :properties | a map of puck property keys to values; currently only changes to the :color, :eye-color, :core-color and :solid properties are supported; all color-related change proposals will be accepted, but :solid change proposals will be accepted only for pucks that are not :mobile
+:fire-torpedo | true or false; if true, and if the proposing puck has enough energy, then a torpedo will be spawned
 
 Proposal functions may refer to any elements of the pucks that they receive, although the :neighbors, :overlaps, :memory, and :inventory of those pucks will have been stripped, and the :positions of those pucks will have been relativized to the position of the puck making the proposal. Positions of offspring pucks specified in :spawn proposals will be interpreted relative to the positions of the parent pucks. Offspring will be given fresh ids, a small portion of the parent's energy, and empty memories and inventory, although subsequent transactions may transfer items or information from parent to child.
 
@@ -166,6 +168,7 @@ Setting | Description | Default
 :cost-of-collision | the amount of energy charged to a puck for a collision | 0.01
 :single-thread-mode | if true then the simulation uses only a single thread and processor core; if false then it runs in a multi-threaded mode using all available cores | true
 :nursery-threshold | the number of active pucks below which nurseries may generate new pucks | 1000
+:torpedo-energy | the amount of energy transferred from a puck to a torpedo that it fires | 0.1
 
 
 

@@ -10,6 +10,15 @@
        (> r pi) (- r two-pi)
        :else r))
 
+(defn rotational-difference
+  "Returns the number of radians separating rot1 and rot2, the shortest way
+around."
+  [rot1 rot2]
+  (let [r1wrapped (wrap-rotation rot1)
+        r2wrapped (wrap-rotation rot2)
+        diff (Math/abs (- r1wrapped r2wrapped))]
+    (min diff (- two-pi diff))))
+
 (defn ms []
   "Returns the current time in milliseconds."
   (java.lang.System/currentTimeMillis))

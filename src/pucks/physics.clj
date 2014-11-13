@@ -294,19 +294,21 @@ changes to the world."
                                                                {:id (gensym "puck-")
                                                                 :energy 0.1
                                                                 :steps 0
-                                                                :memory {}
+                                                                :memory (if (:genome (:memory proposed-puck))
+                                                                          {:genome (:genome (:memory proposed-puck))}
+                                                                          {})
                                                                 :inventory []
                                                                 :sensed []}))))
                                                   (:spawn proposals))
                                             [])
                                           (if (and (:fire-torpedo proposals)
-                                                   (> energy 0.1))
+                                                   (> energy (:torpedo-energy @pucks-settings)))
                                             [(derelativize-position 
                                                position
                                                (merge (torpedo) (let [dirxy (rotation->direction new-r)
                                                                       len (length dirxy)
                                                                       dirxy-norm (map #(/ % len) dirxy)]
-                                                                  {:energy 0.1 
+                                                                  {:energy (:torpedo-energy @pucks-settings) 
                                                                    :rotation rotation 
                                                                    :velocity (*v 10 dirxy-norm)
                                                                    :position (*v 35 dirxy-norm)})))]

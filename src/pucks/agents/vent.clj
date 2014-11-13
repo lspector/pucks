@@ -27,7 +27,8 @@
 ;; Give energy to any overlapping mobile agent, asking nothing in return.
 
 (defn vent-proposals [p]
-  {:transfer (into [] (for [recipient (filter :mobile (:overlaps p))]
+  {:transfer (into [] (for [recipient (filter (complement :torpedo)
+                                              (filter :mobile (:overlaps p)))]
                         {:self (:id p)
                          :other (:id recipient)
                          :bid {:energy 0.01}

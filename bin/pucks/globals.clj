@@ -28,7 +28,8 @@
          :collision-resolution-acceleration 100.0
          :cost-of-living 0.001
          :cost-of-collision 0.01
-         :nursery-threshold 1000}))
+         :nursery-threshold 1000
+         :torpedo-energy 0.1}))
 
 ;; handy constants
 
@@ -37,6 +38,8 @@
 (def two-pi (* 2 Math/PI))
 
 (def half-pi (/ Math/PI 2))
+
+(def quarter-pi (/ Math/PI 4))
 
 (def four-pi (* 2 two-pi))
 

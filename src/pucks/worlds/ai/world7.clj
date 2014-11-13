@@ -19,21 +19,17 @@
   "Returns a sequence of pucks that form a box of stones with a vent in the
    middle and a gate on each side."
   [[center-x center-y]]
-  ;; walls
-  ;; horizontal
   (concat
-    (for [x (range (- center-x 50) (+ center-x 51) 20)
-          y (range (- center-y 50) (+ center-y 51) 20)
-          :when (or (and (== (diff x center-x) 50)
-                         (> (diff y center-y) 20))
-                    (and (== (diff y center-y) 50)
-                         (> (diff x center-x) 20)))]
-      (merge (stone) {:position [x y]}))
+    ;; stones
+    [(merge (stone) {:position [(- center-x 40)(- center-y 40)]})
+     (merge (stone) {:position [(- center-x 40)(+ center-y 40)]})
+     (merge (stone) {:position [(+ center-x 40)(- center-y 40)]})
+     (merge (stone) {:position [(+ center-x 40)(+ center-y 40)]})]
     ;; gates
-    [(merge (gate) {:position [(- center-x 50) center-y]})
-     (merge (gate) {:position [(+ center-x 50) center-y]})
-     (merge (gate) {:position [center-x (- center-y 50)]})
-     (merge (gate) {:position [center-x (+ center-y 50)]})]
+    [(merge (gate) {:position [(- center-x 40) center-y]})
+     (merge (gate) {:position [(+ center-x 40) center-y]})
+     (merge (gate) {:position [center-x (- center-y 40)]})
+     (merge (gate) {:position [center-x (+ center-y 40)]})]
     ;; vent
     [(merge (vent) {:position [center-x center-y]})]))
 

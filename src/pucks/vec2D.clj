@@ -51,4 +51,9 @@ length is longer than limit then returns xy scale to have limit as its length."
     xy
     (*v limit
         (vec (map #(/ % (length xy)) xy)))))
+
+(defn limit1
+  "An abbreviation for (limit-vec2D n 1.0)."
+  [n]
+  (limit-vec2D n 1.0))
   
