@@ -21,15 +21,15 @@
   [[center-x center-y]]
   (concat
     ;; stones
-    [(merge (stone) {:position [(- center-x 40)(- center-y 40)]})
-     (merge (stone) {:position [(- center-x 40)(+ center-y 40)]})
-     (merge (stone) {:position [(+ center-x 40)(- center-y 40)]})
-     (merge (stone) {:position [(+ center-x 40)(+ center-y 40)]})]
+    [(merge (stone) {:position [(- center-x 50)(- center-y 50)]})
+     (merge (stone) {:position [(- center-x 50)(+ center-y 50)]})
+     (merge (stone) {:position [(+ center-x 50)(- center-y 50)]})
+     (merge (stone) {:position [(+ center-x 50)(+ center-y 50)]})]
     ;; gates
-    [(merge (gate) {:position [(- center-x 40) center-y]})
-     (merge (gate) {:position [(+ center-x 40) center-y]})
-     (merge (gate) {:position [center-x (- center-y 40)]})
-     (merge (gate) {:position [center-x (+ center-y 40)]})]
+    [(merge (gate) {:position [(- center-x 50) center-y]})
+     (merge (gate) {:position [(+ center-x 50) center-y]})
+     (merge (gate) {:position [center-x (- center-y 50)]})
+     (merge (gate) {:position [center-x (+ center-y 50)]})]
     ;; vent
     [(merge (vent) {:position [center-x center-y]})]))
 
