@@ -1,9 +1,14 @@
 
 ;; A pucks world.
 
-(ns pucks.worlds.ai.world7
+(ns pucks.worlds.ai.world8
   (:use [pucks core globals]
         [pucks.agents stone vent gate zapper nursery user donor shooter]))
+
+(defn diff
+  "Returns the absolute value of the difference between the two arguments."
+  [n m]
+  (Math/abs (- n m)))
 
 (defn rand+-
   "Returns a positive or negative random number with magnitude less than n."
@@ -55,12 +60,24 @@
                        (concat [(nursery user)]
                                (repeatedly 4 #(do {:ventbox true}))
                                (repeatedly 8 zapper)
-                               (repeatedly 4 #(nursery shooter))
-                               (repeatedly 4 (fn [] 
+                               (repeatedly 1 #(nursery shooter))
+                               (repeatedly 1 (fn [] 
                                                (nursery 
                                                  #(merge (donor :key) 
                                                          {:color [0 0 255]
-                                                          :velocity [(rand+- 5) (rand+- 5)]})))))
+                                                          :velocity [(rand+- 5) (rand+- 5)]}))))
+                               (repeatedly 1 (fn [] 
+                                               (nursery 
+                                                 (fn [] 
+                                                   (let [keep-off-map [:neighbors :overlaps :sensed 
+                                                                       :inventory :memory :draw-function 
+                                                                       :proposal-function :spawn-function]]
+                                                     (merge (donor 
+                                                              {:map (mapv #(apply dissoc (cons % keep-off-map))
+                                                                          @all-agents)}) 
+                                                            {:color [255 96 255]
+                                                             :core-color [255 96 255]
+                                                             :velocity [(rand+- 5) (rand+- 5)]})))))))
                        (shuffle (for [x (range 100 1501 200)
                                       y (range 100 1501 200)]
                                   [x y])))))))
@@ -68,6 +85,8 @@
 (defn settings []
   {:screen-size 1600
    :scale 0.5
-   :single-thread-mode false})
+   :single-thread-mode false
+   :max-velocity 40
+   :torpedo-energy 0.02})
 
 ;(run-pucks (agents) (settings))

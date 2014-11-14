@@ -5,11 +5,6 @@
   (:use [pucks core globals]
         [pucks.agents beacon stone vent gate zapper nursery user donor]))
 
-(defn diff
-  "Returns the absolute value of the difference between the two arguments."
-  [n m]
-  (Math/abs (- n m)))
-
 (defn rand+-
   "Returns a positive or negative random number with magnitude less than n."
   [n]

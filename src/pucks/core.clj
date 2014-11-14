@@ -54,8 +54,8 @@ GUI interactions."
     (reset! last-input-ms (ms))
     (let [scaled-x (int (/ (mouse-x) (:scale @pucks-settings)))
           scaled-y (int (/ (mouse-y) (:scale @pucks-settings)))]
-      (pprint (mapv abbreviate-embedded-agents
-                    (objects-overlapping-xy scaled-x scaled-y)))
+      ;(pprint (mapv abbreviate-embedded-agents
+      ;              (objects-overlapping-xy scaled-x scaled-y)))
       (inspect-tree (objects-overlapping-xy scaled-x scaled-y)))))
 
 (defn run-pucks [agents settings]
