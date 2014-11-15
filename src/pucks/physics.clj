@@ -172,9 +172,9 @@ changes to the world."
                                  (let [transaction (first remaining)
                                        xfer1 (first transaction)
                                        self-id (:self xfer1)
-                                       self (self-id agent-map)
+                                       self (get agent-map self-id)
                                        other-id (:other xfer1)
-                                       other (other-id agent-map)]
+                                       other (get agent-map other-id)]
                                    (if (:zapper self) ;; zapper
                                      (if (:mobile other)
                                        (recur (rest remaining)

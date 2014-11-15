@@ -3,12 +3,7 @@
 
 (ns pucks.worlds.ai.world8
   (:use [pucks core globals]
-        [pucks.agents stone vent gate zapper nursery user donor shooter]))
-
-(defn diff
-  "Returns the absolute value of the difference between the two arguments."
-  [n m]
-  (Math/abs (- n m)))
+        [pucks.agents stone vent gate zapper nursery user donor shooter mapdonor]))
 
 (defn rand+-
   "Returns a positive or negative random number with magnitude less than n."
@@ -52,32 +47,23 @@
                  (merge (stone) {:position [x y]})))))
     ;; other pucks
     (apply concat
-           (mapv #(if (:ventbox %)
+           (mapv #(if (:ventbox %) ;; expand ventbox specifications
                     (ventbox (:position %))
                     [%])
                  (mapv (fn [p loc]
                          (merge p {:position loc}))
                        (concat [(nursery user)]
-                               (repeatedly 4 #(do {:ventbox true}))
+                               (repeatedly 4 #(do {:ventbox true})) ;; will be expanded later
                                (repeatedly 8 zapper)
-                               (repeatedly 1 #(nursery shooter))
-                               (repeatedly 1 (fn [] 
-                                               (nursery 
-                                                 #(merge (donor :key) 
-                                                         {:color [0 0 255]
-                                                          :velocity [(rand+- 5) (rand+- 5)]}))))
-                               (repeatedly 1 (fn [] 
-                                               (nursery 
-                                                 (fn [] 
-                                                   (let [keep-off-map [:neighbors :overlaps :sensed 
-                                                                       :inventory :memory :draw-function 
-                                                                       :proposal-function :spawn-function]]
-                                                     (merge (donor 
-                                                              {:map (mapv #(apply dissoc (cons % keep-off-map))
-                                                                          @all-agents)}) 
-                                                            {:color [255 96 255]
-                                                             :core-color [255 96 255]
-                                                             :velocity [(rand+- 5) (rand+- 5)]})))))))
+                               [(nursery shooter)]
+                               [(nursery 
+                                  #(merge (donor :key) 
+                                          {:color [0 0 255]
+                                           :velocity [(rand+- 5) (rand+- 5)]}))]
+                               [(nursery 
+                                  (fn [] 
+                                    (merge (mapdonor) 
+                                           {:velocity [(rand+- 5) (rand+- 5)]})))])
                        (shuffle (for [x (range 100 1501 200)
                                       y (range 100 1501 200)]
                                   [x y])))))))
