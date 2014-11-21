@@ -15,6 +15,7 @@
    :position (rand-xy)
    :velocity [(* 5 (- (rand) 0.5)) (* 5 (- (rand) 0.5))]
    :rotation (* two-pi (rand))
+   :thrust-angle 0
    :color [255 255 255]
    :energy 1
    :steps 0

@@ -78,6 +78,7 @@ Key | Value | Default
 :position | an [x y] vector representing the puck's current location; this information is not accessible by proposal functions      | a random location in the world 
 :velocity | an [x y] vector representing the number of points that the puck is moving in the x and y directions each time step | each component is random between -2.5 and 2.5
 :rotation | a floating-point number indicating the puck's orientation, in radians rotating clockwise from straight up; 0 is straight up; pi/2 is to the right; pi is straight down; 3pi/2 is to the left | random between 0 and 2pi
+:thrust-angle | a floating-point number indicating the angle of the puck's thruster, in radians rotating clockwise, relative to the puck's :rotation | 0.0
 :color | a vector of integers, each between 0 and 255 (inclusive), for red, green, and blue | 255 for each component (which makes white)
 :core-color | a vector of integers, each between 0 and 255 (inclusive), for red, green, and blue | 255 for each component (which makes white)
 :energy | a floating-point number between 0 and 1 | 1
@@ -108,6 +109,7 @@ Key | Value
 |---|---|
 :acceleration | a floating-point number indicating the target acceleration, which may be limited by settings for :max-acceleration and :max-velocity
 :rotation | a floating-point number indicating the target rotation, which may be limited by the setting of :max-rotational-velocity
+:thrust-angle | a floating-point number indicating the target thrust-angle, which may be limited by the setting of :max-rotational-velocity
 :spawn | a sequence of pucks that are potential offspring *(still under development)*
 :transfer | a sequence of proposed transfers between pucks, each of which must be a map with four key/value pairs: :self, :other, :bid, and :ask. See below for details.
 :memory | a map of any keys to any values
@@ -162,7 +164,7 @@ Setting | Description | Default
 :neighborhood-size | the distance from a puck within which other pucks will be considered for sensing, collision, and overlap-dependent interactions; this should be at least the sensor range plus the largest radius of any puck in the simulation | 200
 :max-velocity | the maximum distance that a puck with radius 1 can move in a single step; this is divided by the radius of a puck to determine its actual maximum velocity | 80
 :max-acceleration | the maximum amount that a puck's velocity can change in one step | 1
-:max-rotational-velocity | the maximum number of radians that a puck's rotation can change in 1 step | 0.05
+:max-rotational-velocity | the maximum number of radians that a puck's rotation or thrust-angle can change in 1 step | 0.05
 :collision-resolution-acceleration | the magnitude of the acceleration applied to resolve collisions (overlaps) of solid puck cores | 100.0
 :cost-of-living | the amount of energy charged to a puck just for living each time step | 0.001
 :cost-of-collision | the amount of energy charged to a puck for a collision | 0.01

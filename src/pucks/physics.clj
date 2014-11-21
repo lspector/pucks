@@ -221,12 +221,13 @@ changes to the world."
         ;; Now we can process all other proposals for agents taken individually. 
         (vec (apply concat
                     (pmapallv ;; do this concurrently if not in single-thread mode
-                              (fn [{:keys [position velocity rotation neighbors proposals mobile energy radius] :as agent}]                                
+                              (fn [{:keys [position velocity rotation thrust-angle neighbors proposals mobile energy radius] :as agent}]                                
                                 (let [colliding-neighbors (filter #(and (:solid %)
                                                                         (colliding? agent %))
                                                                   neighbors)
                                       proposed-a (*v (or (:acceleration proposals) 0) 
-                                                     (rotation->direction rotation)) ;; vec from proposed scalar * rotation
+                                                     (rotation->direction (wrap-rotation
+                                                                            (+ rotation thrust-angle)))) ;; vec from proposed scalar * rotation
                                       anti-collision-a (if mobile
                                                          (if (empty? colliding-neighbors)
                                                            [0 0]
@@ -252,7 +253,7 @@ changes to the world."
                                                              (/ (:max-velocity @pucks-settings) radius)))
                                               [0 0])
                                       new-p (wrap-position (+v position new-v))
-                                      proposed-r (if  (:rotation proposals) (wrap-rotation (:rotation proposals)) nil)
+                                      proposed-r (if (:rotation proposals) (wrap-rotation (:rotation proposals)) nil)
                                       new-r (if (and mobile proposed-r)
                                               (wrap-rotation
                                                 (let [max-rotational-velocity (:max-rotational-velocity @pucks-settings)]
@@ -280,7 +281,36 @@ changes to the world."
                                                     (- rotation (min max-rotational-velocity
                                                                      (+ (- rotation minus-pi)
                                                                         (- pi proposed-r)))))))
-                                              rotation)]
+                                              rotation)
+                                      proposed-ta (if (:thrust-angle proposals) (wrap-rotation (:thrust-angle proposals)) nil)
+                                      new-ta (if (and mobile proposed-ta)
+                                               (wrap-rotation
+                                                 (let [max-rotational-velocity (:max-rotational-velocity @pucks-settings)]
+                                                   (cond 
+                                                     ;; already there
+                                                     (== proposed-ta thrust-angle) 
+                                                     thrust-angle
+                                                     ;; go up normal
+                                                     (and (> proposed-ta thrust-angle) 
+                                                          (< (- proposed-ta thrust-angle) pi))
+                                                     (+ thrust-angle (min max-rotational-velocity
+                                                                          (- proposed-ta thrust-angle)))
+                                                     ;; go up to wrap
+                                                     (and (< proposed-ta thrust-angle)
+                                                          (> (- thrust-angle proposed-ta) pi))
+                                                     (+ thrust-angle (min max-rotational-velocity
+                                                                          (+ (- pi thrust-angle)
+                                                                             (- proposed-ta minus-pi))))
+                                                     ;; go down normal
+                                                     (< proposed-ta thrust-angle)
+                                                     (- thrust-angle (min max-rotational-velocity
+                                                                          (- thrust-angle proposed-ta)))
+                                                     ;; go down to wrap
+                                                     :else
+                                                     (- thrust-angle (min max-rotational-velocity
+                                                                          (+ (- thrust-angle minus-pi)
+                                                                             (- pi proposed-ta)))))))
+                                               thrust-angle)]
                                   (concat (if (and (:spawn proposals)
                                                    (> energy (+ 0.1 (* 0.1 (count (:spawn proposals))))))
                                             (mapv (fn [proposed-puck]
@@ -317,6 +347,7 @@ changes to the world."
                                              (assoc :velocity new-v) ;; new velocity
                                              (assoc :position new-p) ;; new position
                                              (assoc :rotation new-r) ;; new rotation
+                                             (assoc :thrust-angle new-ta) ;; new thrust-angle
                                              (assoc :energy          ;; new energy (deducting costs)
                                                     (min 1
                                                          (max 0
