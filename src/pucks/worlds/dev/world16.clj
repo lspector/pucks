@@ -1,7 +1,7 @@
 
 (ns pucks.worlds.dev.world16
   (:use [pucks core globals util vec2D]
-        [pucks.agents beacon active vent zapper nursery donor mapdonor]))
+        [pucks.agents beacon active vent mapdonor]))
 
 (defn rand+-
   "Returns a positive or negative random number with magnitude less than n."
