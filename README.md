@@ -172,6 +172,11 @@ Setting | Description | Default
 :nursery-threshold | the number of active pucks below which nurseries may generate new pucks | 1000
 :torpedo-energy | the amount of energy transferred from a puck to a torpedo that it fires | 0.1
 
+## Contributors
+
+Lee Spector (primary author)
+
+Eddie Pantridge (testing, contributions to neighbors.clj)
 
 
 ## License

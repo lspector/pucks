@@ -2,8 +2,6 @@
   (:use [pucks core globals util vec2D]
         [pucks.agents active]))
 
-
-
 (defn agents []
   [(merge (active)
           {:proposal-function 
