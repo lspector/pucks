@@ -17,8 +17,8 @@ from inappropriately learning about agents that they have not sensed directly."
 (defn neighborhood-grid
   "Returns a neighborhood grid containing all agents."
   [agents]
-  (let [grid-size (inc (int (/ (:screen-size @pucks-settings)  
-                               (:neighborhood-size @pucks-settings))))]
+  (let [grid-size (int (/ (:screen-size @pucks-settings)  
+                          (:neighborhood-size @pucks-settings)))]
     (loop [grid (vec (repeat grid-size (vec (repeat grid-size []))))
            remaining agents]
       (if (empty? remaining)
