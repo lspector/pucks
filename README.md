@@ -90,7 +90,7 @@ Key | Value | Default
 :inventory | items held by the agent | empty set
 :draw-function | a function that takes a puck and draws it to the screen | a function that draws nothing and returns false
 :proposal-function | a function that takes a puck and returns proposals in a map | a function that returns an empty map
-:spawn-function | a function that takes either no arguments or a puck and returns a sequence of pucks that are potential offspring | a function that returns an empty sequence
+:spawn-function | a function that takes either no arguments or a puck and returns a puck that is a potential child | a function that returns an empty map
    
 Pucks have additional key/value pairs that specify boolean properties of the puck. If the key is present with value **true** then the puck has that property. If it is either absent or present with value **false** then the puck does not have that property. The following are among the possible key/value pairs for boolean properties:
 
