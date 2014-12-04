@@ -7,7 +7,7 @@
   
 (defn spawner-proposals [p]
   (merge {:acceleration 0
-          :rotation (direction->rotation (:velocity p))}
+          :rotation (relative-position->rotation (:velocity p))}
          (if (zero? (rand-int 250))
            {:spawn [((:spawn-function p) p)]}
            {})))
@@ -22,4 +22,3 @@
                                    :rotation (* two-pi (rand))
                                    ;; position will be relative to position of parent
                                    :position [(- (rand-int 3) 1) (- (rand-int 3) 1)]})}))
-

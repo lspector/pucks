@@ -7,7 +7,7 @@
   
 (defn shooter-proposals [p]
   {:acceleration 0
-   :rotation (direction->rotation (:velocity p))
+   :rotation (relative-position->rotation (:velocity p))
    :fire-torpedo (zero? (rand-int 20))})
 
 (defn shooter []
@@ -15,4 +15,3 @@
          {:linear true
           :proposal-function shooter-proposals
           :color [255 0 0]}))
-

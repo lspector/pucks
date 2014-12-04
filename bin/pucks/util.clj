@@ -19,15 +19,17 @@ around."
         diff (Math/abs (- r1wrapped r2wrapped))]
     (min diff (- two-pi diff))))
 
-(defn ms []
+(defn ms 
   "Returns the current time in milliseconds."
+  []
   (java.lang.System/currentTimeMillis))
 
-(defn wrap-position [[x y]]
+(defn wrap-position 
   "Returns the given coordinate if it refers to a position in the world. If not,
 then this returns the coordinate resulting from wrapping the coordinate around
 the world, assuming it is torroidal, so that the returned coordinate will indeed
 refer to a position in the world." 
+  [[x y]]
   (let [screen-size (:screen-size @pucks-settings)]
     [(if (< x 0) 
        (+ screen-size x)
@@ -40,12 +42,18 @@ refer to a position in the world."
          (- y screen-size)
          y))]))
 
-(defn direction->rotation [[x y]]
-  "Returns a rotation corresponding to a provided [x y] vector."
+(defn relative-position->rotation 
+  "Returns a rotation corresponding to a provided [x y] relative position."
+  [[x y]]
   ;; from http://stackoverflow.com/questions/2276855/xna-2d-vector-angles-whats-the-correct-way-to-calculate
   (if (and (zero? x) (zero? y))
     (- (rand two-pi) pi)
     (atan2 x (- y))))
+
+(defn direction->rotation   ;; retained for legacy code
+  "Returns a rotation corresponding to a provided [x y] relative position."
+  [[x y]]
+  (relative-position->rotation [x y]))
 
 (defn relativize-position
   "Returns agent but will its position converted to be relative to the provided
@@ -75,10 +83,15 @@ position in a toroidal world."
   [reference-xy agent]
   (assoc agent :position (wrap-position (+v reference-xy (:position agent)))))
 
-(defn rotation->direction 
-  "Returns an [x y] vector pointing in the direction of the given rotation."
+(defn rotation->relative-position
+  "Returns an [x y] relative position in the direction of the given rotation."
   [theta]
   [(Math/sin theta) (Math/cos (- theta Math/PI))])
+
+(defn rotation->direction ;; retained for legacy code
+  "Returns an [x y] relative position in the direction of the given rotation."
+  [theta]
+  (rotation->relative-position theta))
 
 (defn objects-overlapping-xy
   "Returns a vector of all objects in the world that overlap the given 

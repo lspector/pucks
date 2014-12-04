@@ -8,14 +8,14 @@
 
 (defn rotation-velocity-mismatch [p]
   (abs (- (:rotation p) 
-          (direction->rotation (:velocity p)))))
+          (relative-position->rotation (:velocity p)))))
   
 (defn darter-proposals [p]
   (case (:task (:memory p))
     ;; if orienting, then if not rotated close to direction of velocity then 
     ;; rotate in that direction; if close enough then switch to stopping task
     :orienting (if (> (rotation-velocity-mismatch p) 0.1)
-                 {:rotation (direction->rotation (:velocity p))}
+                 {:rotation (relative-position->rotation (:velocity p))}
                  {:memory {:task :stopping}})
     ;; if stopping, then if still going too fast then accelerate against velocity;
     ;; if slow enough then switch to re-orienting task with a randomly chosen target rotation

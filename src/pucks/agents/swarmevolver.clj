@@ -4,10 +4,10 @@
   (:use [pucks globals util vec2D]
         pucks.agents.active))
 
-(defn rand-direction 
-  "Returns a random direction vector."
+(defn rand-relative-position 
+  "Returns a random relative-position vector."
   []
-  (rotation->direction (- (rand two-pi) pi)))
+  (rotation->relative-position (- (rand two-pi) pi)))
 
 (defn rand-urge
   "Returns a random urge level, which will be between -1.0 and 1.0."
@@ -43,7 +43,7 @@ tolerance."
   "Returns true if puck p1 is facing puck p2, assuming p1 is sensing p2 
 and that p2's position is relative to p1's."
   (< (rotational-difference (:rotation p1)
-                            (direction->rotation (:position p2)))
+                            (relative-position->rotation (:position p2)))
      quarter-pi))
 
 (defn swarmevolver-proposals [p]
@@ -58,8 +58,8 @@ and that p2's position is relative to p1's."
               :properties {:color (:color g)
                            :eye-color (:eye-color g)
                            :core-color (:core-color g)}
-              :rotation (direction->rotation 
-                          (+v (rotation->direction (:rotation p)) 
+              :rotation (relative-position->rotation 
+                          (+v (rotation->relative-position (:rotation p)) 
                               (if (empty? selves)
                                 [0 0]
                                 (*v (:self-flock-urge g)
@@ -85,7 +85,7 @@ and that p2's position is relative to p1's."
                                 (*v (:zapper-urge g)
                                     (limit1 (apply avgv (map :position zappers)))))                          
                               (*v (:random-urge g)
-                                  (rand-direction))))}
+                                  (rand-relative-position))))}
              (if (> (* (max (:spawn-probability g) 0.01)
                        (/ (:energy p) 100))
                     (rand))

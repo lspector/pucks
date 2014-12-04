@@ -12,7 +12,7 @@
                     :proposal-function 
                     (fn [p]
                         {:acceleration 0
-                         :rotation (direction->rotation (:velocity p))
+                         :rotation (relative-position->rotation (:velocity p))
                          :transfer (for [anyone (:overlaps p)]
                                      {:self (:id p)
                                       :other (:id anyone)
@@ -26,7 +26,7 @@
                     :proposal-function 
                     (fn [p]
                         {:acceleration 0
-                         :rotation (direction->rotation (:velocity p))
+                         :rotation (relative-position->rotation (:velocity p))
                          :transfer (for [anyone (:overlaps p)]
                                      {:self (:id p)
                                       :other (:id anyone)

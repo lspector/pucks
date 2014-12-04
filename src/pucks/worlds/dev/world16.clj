@@ -32,11 +32,11 @@
                                 sensed-beacon (first (filter :beacon (:sensed p)))
                                 sensed-vent (first (filter :vent (:sensed p)))]
                             (if sensed-vent
-                              (direction->rotation (:position sensed-vent))
+                              (relative-position->rotation (:position sensed-vent))
                               (if (and the-map vent-on-map sensed-beacon)
-                                (direction->rotation (-v (:position vent-on-map)
-                                                         (:id sensed-beacon)))
-                                (direction->rotation (:velocity p)))))})
+                                (relative-position->rotation (-v (:position vent-on-map)
+                                                                 (:id sensed-beacon)))
+                                (relative-position->rotation (:velocity p)))))})
              :position [200 600]
              :rotation 0
              :velocity [0 -2]})]))

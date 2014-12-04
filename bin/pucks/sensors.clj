@@ -16,7 +16,7 @@ within sensor range."
                   (assoc :inventory []))
                (filterv #(and (let [angular-difference ;; in front of me
                                     (Math/abs (- (:rotation p) 
-                                                 (direction->rotation (:position %))))]
+                                                 (relative-position->rotation (:position %))))]
                                 (or (<= angular-difference half-pi)
                                     (>= angular-difference (+ pi half-pi)))) 
                               (<= (- (length (:position %)) (:radius %)) ;; within range

@@ -4,7 +4,7 @@
 
 (defn opener-proposals [p]
   {:acceleration 0
-   :rotation (direction->rotation (:velocity p))
+   :rotation (relative-position->rotation (:velocity p))
    :transfer (vec (concat 
                     ;; ask for a key from anyone
                     (for [anyone (:overlaps p)]

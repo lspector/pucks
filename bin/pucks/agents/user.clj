@@ -7,7 +7,7 @@
 
 (defn user-proposals [p]
   {:acceleration 0
-   :rotation (direction->rotation (:velocity p))})
+   :rotation (relative-position->rotation (:velocity p))})
 
 (defn user []
   (merge (active)

@@ -5,13 +5,13 @@
         pucks.agents.active))
 
 (defn rand-direction []
-  (rotation->direction (- (rand two-pi) pi)))
+  (rotation->relative-position (- (rand two-pi) pi)))
 
 (defn swarmer-proposals [p]
   {:acceleration 1
-   :rotation (direction->rotation 
+   :rotation (relative-position->rotation 
               (+v (if (empty? (filter :mobile (:sensed p)))
-                    (rotation->direction (:rotation p)) 
+                    (rotation->relative-position (:rotation p)) 
                     (apply avgv (map :velocity (filter :mobile (:sensed p)))))
                   (rand-direction)))})
 

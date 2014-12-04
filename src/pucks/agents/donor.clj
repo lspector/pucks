@@ -4,7 +4,7 @@
         [pucks.agents active]))
 
 (defn donor-proposals [p item]
-  {:rotation (direction->rotation (:velocity p))
+  {:rotation (relative-position->rotation (:velocity p))
    :transfer (into [] (for [recipient (filter :mobile (:overlaps p))]
                         {:self (:id p)
                          :other (:id recipient)

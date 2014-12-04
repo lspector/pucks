@@ -5,7 +5,7 @@
         [pucks.agents active zapper]))
   
 (defn torpedo-proposals [p]
-  {:rotation (direction->rotation (:velocity p))
+  {:rotation (relative-position->rotation (:velocity p))
    :transfer (into [] (for [victim (filter :mobile (:overlaps p))]
                         {:self (:id p)
                          :other (:id victim)
@@ -19,4 +19,3 @@
           :proposal-function torpedo-proposals
           :color [200 100 0]
           :radius 8}))
-

@@ -226,8 +226,9 @@ changes to the world."
                                                                         (colliding? agent %))
                                                                   neighbors)
                                       proposed-a (*v (or (:acceleration proposals) 0) 
-                                                     (rotation->direction (wrap-rotation
-                                                                            (+ rotation thrust-angle)))) ;; vec from proposed scalar * rotation
+                                                     (rotation->relative-position 
+                                                       (wrap-rotation
+                                                         (+ rotation thrust-angle)))) ;; vec from proposed scalar * rotation
                                       anti-collision-a (if mobile
                                                          (if (empty? colliding-neighbors)
                                                            [0 0]
@@ -335,7 +336,7 @@ changes to the world."
                                                    (> energy (:torpedo-energy @pucks-settings)))
                                             [(derelativize-position 
                                                position
-                                               (merge (torpedo) (let [dirxy (rotation->direction new-r)
+                                               (merge (torpedo) (let [dirxy (rotation->relative-position new-r)
                                                                       len (length dirxy)
                                                                       dirxy-norm (map #(/ % len) dirxy)]
                                                                   {:energy (:torpedo-energy @pucks-settings) 

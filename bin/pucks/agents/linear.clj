@@ -6,7 +6,7 @@
   
 (defn linear-proposals [p]
   {:acceleration 0
-   :rotation (direction->rotation (:velocity p))})
+   :rotation (relative-position->rotation (:velocity p))})
 
 (defn linear []
   (merge (active)

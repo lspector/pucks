@@ -4,7 +4,7 @@
         [pucks.agents active]))
 
 (defn mapdonor-proposals [p]
-  (merge {:rotation (direction->rotation (:velocity p))}
+  (merge {:rotation (relative-position->rotation (:velocity p))}
          {:transfer (vec (for [recipient (filter :mobile (:overlaps p))]
                            {:self (:id p)
                             :other (:id recipient)
