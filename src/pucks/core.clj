@@ -17,13 +17,19 @@ the global iteration counter."
   []
   (smooth)
   (no-stroke)
-  (reset! iteration 0))
+  (reset! iteration 0)
+  (when-let [limit (:ms-limit @pucks-settings)]
+    (reset! end-ms (+ (ms) limit))))
 
 (defn draw
   "The Quil draw function for pucks. In addition to stepping forward the
 simulation and actually drawing the world to the display, it also handles
 GUI interactions."
   []
+  (when (and (:ms-limit @pucks-settings)
+             (> (ms) @end-ms))
+    (println "Iterations completed:" @iteration)
+    (System/exit 0))
   (when (not @paused)     ;; only step forward and draw if not paused
     (swap! iteration inc) ;; increment the global interation counter
     (swap! all-agents     ;; update step clocks in agents

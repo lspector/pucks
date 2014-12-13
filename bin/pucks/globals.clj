@@ -14,6 +14,9 @@
 
 (def number-of-active-agents (atom 0)) ;; the current number of active agents
 
+(def end-ms (atom 0))        ;; the time (in ms) at which the simulation should 
+                             ;; be terminated, if (:ms-limit @pucks-settings) is non-nil
+
 ;; simulation parameters
 
 (def pucks-settings
@@ -29,7 +32,8 @@
          :cost-of-living 0.001
          :cost-of-collision 0.01
          :nursery-threshold 1000
-         :torpedo-energy 0.1}))
+         :torpedo-energy 0.1
+         :ms-limit nil}))
 
 ;; handy constants
 

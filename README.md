@@ -171,12 +171,13 @@ Setting | Description | Default
 :single-thread-mode | if true then the simulation uses only a single thread and processor core; if false then it runs in a multi-threaded mode using all available cores | true
 :nursery-threshold | the number of active pucks below which nurseries may generate new pucks | 1000
 :torpedo-energy | the amount of energy transferred from a puck to a torpedo that it fires | 0.1
+:ms-limit | the number of milliseconds that the simulation should run; if nil then it will run forever or until manually terminated; if a number then the simulation will run for that many milliseconds, print the number of iterations completed, and exit | nil
 
 ## Contributors
 
 Lee Spector (primary author)
 
-Eddie Pantridge (testing, contributions to neighbors.clj)
+Eddie Pantridge (testing, contributions to neighbors detection and timing code)
 
 
 ## License
