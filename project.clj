@@ -1,4 +1,4 @@
-(defproject pucks "0.1.21"
+(defproject pucks "0.1.22"
   :description "An environment for experiments and education in artificial intelligence and artificial life."
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
