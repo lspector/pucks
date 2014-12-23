@@ -30,6 +30,10 @@ This will run a simple world intended for use by AI students who are learning ab
 
 Students should see if they can change the definition of the user agent (in src/pucks/agents/user/clj) to get it to survive indefinitely.
 
+## Blog
+
+A blog for pucks-related posts, including videos, can be found at [http://blog4pucks.blogspot.com](http://blog4pucks.blogspot.com).
+
 ## Description
 
 Pucks are flat.
@@ -172,12 +176,14 @@ Setting | Description | Default
 :nursery-threshold | the number of active pucks below which nurseries may generate new pucks | 1000
 :torpedo-energy | the amount of energy transferred from a puck to a torpedo that it fires | 0.1
 :ms-limit | the number of milliseconds that the simulation should run; if nil then it will run forever or until manually terminated; if a number then the simulation will run for that many milliseconds, print the number of iterations completed, and exit | nil
+:pause-on-start | if true then the simulation will be paused immediately when started | false
+
 
 ## Contributors
 
 Lee Spector (primary author)
 
-Eddie Pantridge (testing, contributions to neighbors detection and timing code)
+Eddie Pantridge (testing, contributions to neighbor detection and timing code)
 
 
 ## License

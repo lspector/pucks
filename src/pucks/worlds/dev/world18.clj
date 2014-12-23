@@ -17,4 +17,4 @@
    :neighborhood-size 100
    :ms-limit 60000})
 
-(run-pucks (agents) (settings)) 
+;(run-pucks (agents) (settings)) 

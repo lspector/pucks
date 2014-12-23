@@ -44,8 +44,8 @@ GUI interactions."
     (run-sensors)         ;; augment each agent with sensed objects
     (generate-proposals)  ;; generate proposals from each agent
     (arbitrate-proposals) ;; arbitrate proposals and make changes to world
-    (reap)                ;; eliminate any dead agents
-    (draw-agents))        ;; draw the world to the display
+    (reap))                ;; eliminate any dead agents
+  (draw-agents)        ;; draw the world to the display
   ;; handle space-key presses to pause/unpause the simulation
   (when (and (key-pressed?)
              ;; avoid triggering multiple times for one key press
@@ -69,6 +69,8 @@ GUI interactions."
 be merged with the defaults)."
   (reset! all-agents agents)
   (swap! pucks-settings #(merge % settings))
+  (when (:pause-on-start @pucks-settings)
+    (reset! paused true))
   (let [scaled-screen-size (* (:scale @pucks-settings) 
                               (:screen-size @pucks-settings))]
         (sketch

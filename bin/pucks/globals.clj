@@ -33,7 +33,8 @@
          :cost-of-collision 0.01
          :nursery-threshold 1000
          :torpedo-energy 0.1
-         :ms-limit nil}))
+         :ms-limit nil
+         :pause-on-start nil}))
 
 ;; handy constants
 

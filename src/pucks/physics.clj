@@ -136,6 +136,23 @@ transfer from another agent is required for the transfer to proceed."
   [xfer] 
   (or (and (coll? (:ask xfer)) (empty? (:ask xfer)))
       (empty? (:bid xfer))))
+
+(defn enforce-bonds
+  "Takes a sequence of agents for which new velocities have been calculated and
+returns a sequence of the agents with the velocities adjusted to enforce the bonds
+between agents."
+  [agents]
+  (let [agent-map (zipmap (map :id agents) agents)]
+    (mapv (fn [a]
+            (if (:bound-to a)
+              (assoc a 
+                     :velocity
+                     (+v (*v 0.1 (:velocity a))
+                         (*v 0.9 (avgv (mapv :velocity
+                                             (mapv #(get agent-map %)
+                                                   (:bound-to a)))))))
+              a))
+          agents)))
             
 (defn arbitrate-proposals
   "Processes all of the proposals of all of the agents and makes appropriate
@@ -219,156 +236,157 @@ changes to the world."
                                              (recur (rest remaining) agent-map)))))))))]
         ;; The world after all transactions have been conducted is now in post-xfer-agents.
         ;; Now we can process all other proposals for agents taken individually. 
-        (vec (apply concat
-                    (pmapallv ;; do this concurrently if not in single-thread mode
-                              (fn [{:keys [position velocity rotation thrust-angle neighbors proposals mobile energy radius] :as agent}]                                
-                                (let [colliding-neighbors (filter #(and (:solid %)
-                                                                        (colliding? agent %))
-                                                                  neighbors)
-                                      proposed-a (*v (or (:acceleration proposals) 0) 
-                                                     (rotation->relative-position 
-                                                       (wrap-rotation
-                                                         (+ rotation thrust-angle)))) ;; vec from proposed scalar * rotation
-                                      anti-collision-a (if mobile
-                                                         (if (empty? colliding-neighbors)
-                                                           [0 0]
-                                                           (*v (:collision-resolution-acceleration @pucks-settings)
-                                                               (apply avgv 
-                                                                      (mapv -v (mapv :position
-                                                                                     colliding-neighbors)))))
-                                                         [0 0])
-                                      just-collided (not (zero? (length anti-collision-a)))
-                                      new-a (limit-vec2D (+v proposed-a anti-collision-a) 
-                                                         (* (if just-collided 10 1)
-                                                            (:max-acceleration @pucks-settings)))
-                                      proposed-v (+v velocity new-a)
-                                      new-v (if mobile 
-                                              (limit-vec2D proposed-v 
-                                                           (if just-collided
-                                                             (max 0.5
-                                                                  (min (/ (:max-velocity @pucks-settings) radius)
-                                                                       (length (apply +v 
-                                                                                      (concat [velocity]
-                                                                                              (mapv :velocity
-                                                                                                    colliding-neighbors))))))
-                                                             (/ (:max-velocity @pucks-settings) radius)))
-                                              [0 0])
-                                      new-p (wrap-position (+v position new-v))
-                                      proposed-r (if (:rotation proposals) (wrap-rotation (:rotation proposals)) nil)
-                                      new-r (if (and mobile proposed-r)
-                                              (wrap-rotation
-                                                (let [max-rotational-velocity (:max-rotational-velocity @pucks-settings)]
-                                                  (cond 
-                                                    ;; already there
-                                                    (== proposed-r rotation) 
-                                                    rotation
-                                                    ;; go up normal
-                                                    (and (> proposed-r rotation) 
-                                                         (< (- proposed-r rotation) pi))
-                                                    (+ rotation (min max-rotational-velocity
-                                                                     (- proposed-r rotation)))
-                                                    ;; go up to wrap
-                                                    (and (< proposed-r rotation)
-                                                         (> (- rotation proposed-r) pi))
-                                                    (+ rotation (min max-rotational-velocity
-                                                                     (+ (- pi rotation)
-                                                                        (- proposed-r minus-pi))))
-                                                    ;; go down normal
-                                                    (< proposed-r rotation)
-                                                    (- rotation (min max-rotational-velocity
-                                                                     (- rotation proposed-r)))
-                                                    ;; go down to wrap
-                                                    :else
-                                                    (- rotation (min max-rotational-velocity
-                                                                     (+ (- rotation minus-pi)
-                                                                        (- pi proposed-r)))))))
-                                              rotation)
-                                      proposed-ta (if (:thrust-angle proposals) (wrap-rotation (:thrust-angle proposals)) nil)
-                                      new-ta (if (and mobile proposed-ta)
-                                               (wrap-rotation
-                                                 (let [max-rotational-velocity (:max-rotational-velocity @pucks-settings)]
-                                                   (cond 
-                                                     ;; already there
-                                                     (== proposed-ta thrust-angle) 
-                                                     thrust-angle
-                                                     ;; go up normal
-                                                     (and (> proposed-ta thrust-angle) 
-                                                          (< (- proposed-ta thrust-angle) pi))
-                                                     (+ thrust-angle (min max-rotational-velocity
-                                                                          (- proposed-ta thrust-angle)))
-                                                     ;; go up to wrap
-                                                     (and (< proposed-ta thrust-angle)
-                                                          (> (- thrust-angle proposed-ta) pi))
-                                                     (+ thrust-angle (min max-rotational-velocity
-                                                                          (+ (- pi thrust-angle)
-                                                                             (- proposed-ta minus-pi))))
-                                                     ;; go down normal
-                                                     (< proposed-ta thrust-angle)
-                                                     (- thrust-angle (min max-rotational-velocity
-                                                                          (- thrust-angle proposed-ta)))
-                                                     ;; go down to wrap
-                                                     :else
-                                                     (- thrust-angle (min max-rotational-velocity
-                                                                          (+ (- thrust-angle minus-pi)
-                                                                             (- pi proposed-ta)))))))
-                                               thrust-angle)]
-                                  (concat (if (and (:spawn proposals)
-                                                   (> energy (+ 0.1 (* 0.1 (count (:spawn proposals))))))
-                                            (mapv (fn [proposed-puck]
-                                                    (derelativize-position 
-                                                      position
-                                                      (merge proposed-puck
-                                                             (if (:nursery agent)
-                                                               {:id (gensym "puck-")
-                                                                :energy 1.0
-                                                                :steps 0}
-                                                               {:id (gensym "puck-")
-                                                                :energy 0.1
-                                                                :steps 0
-                                                                :memory (if (:genome (:memory proposed-puck))
-                                                                          {:genome (:genome (:memory proposed-puck))}
-                                                                          {})
-                                                                :inventory []
-                                                                :sensed []}))))
-                                                  (:spawn proposals))
-                                            [])
-                                          (if (and (:fire-torpedo proposals)
-                                                   (> energy (:torpedo-energy @pucks-settings)))
-                                            [(derelativize-position 
-                                               position
-                                               (merge (torpedo) (let [dirxy (rotation->relative-position new-r)
-                                                                      len (length dirxy)
-                                                                      dirxy-norm (map #(/ % len) dirxy)]
-                                                                  {:energy (:torpedo-energy @pucks-settings) 
-                                                                   :rotation rotation 
-                                                                   :velocity (*v 10 dirxy-norm)
-                                                                   :position (*v 35 dirxy-norm)})))]
-                                            [])
-                                          [(-> agent
-                                             (assoc :velocity new-v) ;; new velocity
-                                             (assoc :position new-p) ;; new position
-                                             (assoc :rotation new-r) ;; new rotation
-                                             (assoc :thrust-angle new-ta) ;; new thrust-angle
-                                             (assoc :energy          ;; new energy (deducting costs)
-                                                    (min 1
-                                                         (max 0
-                                                              (- energy 
-                                                                 (if mobile (:cost-of-living @pucks-settings) 0)
-                                                                 (if just-collided (:cost-of-collision @pucks-settings) 0)
-                                                                 (if (:vent agent) -0.005 0)
-                                                                 (if (and (:fire-torpedo proposals)
-                                                                          (> energy 0.1))
-                                                                   0.1
-                                                                   0)
-                                                                 (if (and (:spawn proposals)
-                                                                          (not (:nursery agent))
-                                                                          (> energy (+ 0.1 (* 0.1 (count (:spawn proposals))))))
-                                                                   (* 0.1 (count (:spawn proposals)))
-                                                                   0)))))
-                                             (assoc :just-collided just-collided) ;; store collision for GUI
-                                             (assoc :memory (merge (:memory agent) 
-                                                                   (:memory proposals) 
-                                                                   (:promise agent)))
-                                             (dissoc :promise)
-                                             (update-properties (:properties proposals)))])))
-                              post-xfer-agents)))))))
+        (enforce-bonds 
+          (vec (apply concat
+                      (pmapallv ;; do this concurrently if not in single-thread mode
+                                (fn [{:keys [position velocity rotation thrust-angle neighbors proposals mobile energy radius] :as agent}]                                
+                                  (let [colliding-neighbors (filter #(and (:solid %)
+                                                                          (colliding? agent %))
+                                                                    neighbors)
+                                        proposed-a (*v (or (:acceleration proposals) 0) 
+                                                       (rotation->relative-position 
+                                                         (wrap-rotation
+                                                           (+ rotation thrust-angle)))) ;; vec from proposed scalar * rotation
+                                        anti-collision-a (if mobile
+                                                           (if (empty? colliding-neighbors)
+                                                             [0 0]
+                                                             (*v (:collision-resolution-acceleration @pucks-settings)
+                                                                 (apply avgv 
+                                                                        (mapv -v (mapv :position
+                                                                                       colliding-neighbors)))))
+                                                           [0 0])
+                                        just-collided (not (zero? (length anti-collision-a)))
+                                        new-a (limit-vec2D (+v proposed-a anti-collision-a) 
+                                                           (* (if just-collided 10 1)
+                                                              (:max-acceleration @pucks-settings)))
+                                        proposed-v (+v velocity new-a)
+                                        new-v (if mobile 
+                                                (limit-vec2D proposed-v 
+                                                             (if just-collided
+                                                               (max 0.5
+                                                                    (min (/ (:max-velocity @pucks-settings) radius)
+                                                                         (length (apply +v 
+                                                                                        (concat [velocity]
+                                                                                                (mapv :velocity
+                                                                                                      colliding-neighbors))))))
+                                                               (/ (:max-velocity @pucks-settings) radius)))
+                                                [0 0])
+                                        new-p (wrap-position (+v position new-v))
+                                        proposed-r (if (:rotation proposals) (wrap-rotation (:rotation proposals)) nil)
+                                        new-r (if (and mobile proposed-r)
+                                                (wrap-rotation
+                                                  (let [max-rotational-velocity (:max-rotational-velocity @pucks-settings)]
+                                                    (cond 
+                                                      ;; already there
+                                                      (== proposed-r rotation) 
+                                                      rotation
+                                                      ;; go up normal
+                                                      (and (> proposed-r rotation) 
+                                                           (< (- proposed-r rotation) pi))
+                                                      (+ rotation (min max-rotational-velocity
+                                                                       (- proposed-r rotation)))
+                                                      ;; go up to wrap
+                                                      (and (< proposed-r rotation)
+                                                           (> (- rotation proposed-r) pi))
+                                                      (+ rotation (min max-rotational-velocity
+                                                                       (+ (- pi rotation)
+                                                                          (- proposed-r minus-pi))))
+                                                      ;; go down normal
+                                                      (< proposed-r rotation)
+                                                      (- rotation (min max-rotational-velocity
+                                                                       (- rotation proposed-r)))
+                                                      ;; go down to wrap
+                                                      :else
+                                                      (- rotation (min max-rotational-velocity
+                                                                       (+ (- rotation minus-pi)
+                                                                          (- pi proposed-r)))))))
+                                                rotation)
+                                        proposed-ta (if (:thrust-angle proposals) (wrap-rotation (:thrust-angle proposals)) nil)
+                                        new-ta (if (and mobile proposed-ta)
+                                                 (wrap-rotation
+                                                   (let [max-rotational-velocity (:max-rotational-velocity @pucks-settings)]
+                                                     (cond 
+                                                       ;; already there
+                                                       (== proposed-ta thrust-angle) 
+                                                       thrust-angle
+                                                       ;; go up normal
+                                                       (and (> proposed-ta thrust-angle) 
+                                                            (< (- proposed-ta thrust-angle) pi))
+                                                       (+ thrust-angle (min max-rotational-velocity
+                                                                            (- proposed-ta thrust-angle)))
+                                                       ;; go up to wrap
+                                                       (and (< proposed-ta thrust-angle)
+                                                            (> (- thrust-angle proposed-ta) pi))
+                                                       (+ thrust-angle (min max-rotational-velocity
+                                                                            (+ (- pi thrust-angle)
+                                                                               (- proposed-ta minus-pi))))
+                                                       ;; go down normal
+                                                       (< proposed-ta thrust-angle)
+                                                       (- thrust-angle (min max-rotational-velocity
+                                                                            (- thrust-angle proposed-ta)))
+                                                       ;; go down to wrap
+                                                       :else
+                                                       (- thrust-angle (min max-rotational-velocity
+                                                                            (+ (- thrust-angle minus-pi)
+                                                                               (- pi proposed-ta)))))))
+                                                 thrust-angle)]
+                                    (concat (if (and (:spawn proposals)
+                                                     (> energy (+ 0.1 (* 0.1 (count (:spawn proposals))))))
+                                              (mapv (fn [proposed-puck]
+                                                      (derelativize-position 
+                                                        position
+                                                        (merge proposed-puck
+                                                               (if (:nursery agent)
+                                                                 {:id (gensym "puck-")
+                                                                  :energy 1.0
+                                                                  :steps 0}
+                                                                 {:id (gensym "puck-")
+                                                                  :energy 0.1
+                                                                  :steps 0
+                                                                  :memory (if (:genome (:memory proposed-puck))
+                                                                            {:genome (:genome (:memory proposed-puck))}
+                                                                            {})
+                                                                  :inventory []
+                                                                  :sensed []}))))
+                                                    (:spawn proposals))
+                                              [])
+                                            (if (and (:fire-torpedo proposals)
+                                                     (> energy (:torpedo-energy @pucks-settings)))
+                                              [(derelativize-position 
+                                                 position
+                                                 (merge (torpedo) (let [dirxy (rotation->relative-position new-r)
+                                                                        len (length dirxy)
+                                                                        dirxy-norm (map #(/ % len) dirxy)]
+                                                                    {:energy (:torpedo-energy @pucks-settings) 
+                                                                     :rotation rotation 
+                                                                     :velocity (*v 10 dirxy-norm)
+                                                                     :position (*v 35 dirxy-norm)})))]
+                                              [])
+                                            [(-> agent
+                                               (assoc :velocity new-v) ;; new velocity
+                                               (assoc :position new-p) ;; new position
+                                               (assoc :rotation new-r) ;; new rotation
+                                               (assoc :thrust-angle new-ta) ;; new thrust-angle
+                                               (assoc :energy          ;; new energy (deducting costs)
+                                                      (min 1
+                                                           (max 0
+                                                                (- energy 
+                                                                   (if mobile (:cost-of-living @pucks-settings) 0)
+                                                                   (if just-collided (:cost-of-collision @pucks-settings) 0)
+                                                                   (if (:vent agent) -0.005 0)
+                                                                   (if (and (:fire-torpedo proposals)
+                                                                            (> energy 0.1))
+                                                                     0.1
+                                                                     0)
+                                                                   (if (and (:spawn proposals)
+                                                                            (not (:nursery agent))
+                                                                            (> energy (+ 0.1 (* 0.1 (count (:spawn proposals))))))
+                                                                     (* 0.1 (count (:spawn proposals)))
+                                                                     0)))))
+                                               (assoc :just-collided just-collided) ;; store collision for GUI
+                                               (assoc :memory (merge (:memory agent) 
+                                                                     (:memory proposals) 
+                                                                     (:promise agent)))
+                                               (dissoc :promise)
+                                               (update-properties (:properties proposals)))])))
+                                post-xfer-agents))))))))

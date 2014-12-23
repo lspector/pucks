@@ -5,7 +5,7 @@
             :url "https://github.com/lspector/pucks"}
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [quil "2.2.2"]]
-  :main ^:skip-aot pucks.core
+  :main pucks.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}}
   ;; the following should automatically take n% of the machine's RAM and also use the G1 garbage collector
