@@ -85,6 +85,7 @@ If it is not a map then it should be a function of two arguments (bids)."
                         :inventory (remove-one v (:inventory result))
                         :promise (merge (:promise result) v)
                         :memory (:memory result)
+                        :bound-to (:bound-to result)
                         nil)))))))
 
 (defn with 
@@ -102,6 +103,7 @@ If it is not a map then it should be a function of two arguments (bids)."
                         :energy (min 1.0 (+ (:energy result) v))
                         :inventory (conj (:inventory result) v)
                         :memory (merge (:memory result) v)
+                        :bound-to (conj (:bound-to result) v)
                         nil)))))))
 
 (defn process-transfer-bid-in-agent-map
@@ -147,10 +149,10 @@ between agents."
             (if (:bound-to a)
               (assoc a 
                      :velocity
-                     (+v (*v 0.1 (:velocity a))
-                         (*v 0.9 (avgv (mapv :velocity
-                                             (mapv #(get agent-map %)
-                                                   (:bound-to a)))))))
+                     (+v (*v 0.05 (:velocity a))
+                         (*v 0.95 (apply avgv (mapv :velocity
+                                                    (mapv #(get agent-map %)
+                                                          (:bound-to a)))))))
               a))
           agents)))
             
@@ -183,7 +185,9 @@ changes to the world."
                                                           % (first remaining))
                                                        remaining))))))
             post-xfer-agents (loop [remaining transactions
-                                    agent-map (zipmap (map :id agents) agents)]
+                                    agent-map (zipmap (map :id agents) 
+                                                      (map #(dissoc % :bound-to)
+                                                           agents))]
                                (if (empty? remaining)
                                  (vec (vals agent-map))
                                  (let [transaction (first remaining)
