@@ -149,10 +149,12 @@ between agents."
             (if (:bound-to a)
               (assoc a 
                      :velocity
-                     (+v (*v 0.05 (:velocity a))
-                         (*v 0.95 (apply avgv (mapv :velocity
-                                                    (mapv #(get agent-map %)
-                                                          (:bound-to a)))))))
+                     (+v (*v (- 1.0 (:bond-strength @pucks-settings)) 
+                             (:velocity a))
+                         (*v (:bond-strength @pucks-settings) 
+                             (apply avgv (mapv :velocity
+                                               (mapv #(get agent-map %)
+                                                     (:bound-to a)))))))
               a))
           agents)))
             

@@ -17,11 +17,7 @@
                         {:acceleration (- (rand 0.2) 0.1)
                          :rotation (relative-position->rotation
                                      (+v [(- (rand 0.2) 0.1) (- (rand 0.2) 0.1)]
-                                         (rotation->relative-position (:rotation p)) 
-                                         #_(if (empty? (filter :vent (:sensed p)))
-                                            (rotation->relative-position (:rotation p)) 
-                                            (:position (first (filter :vent (:sensed p)))))
-                                         ))
+                                         (rotation->relative-position (:rotation p))))
                          :transfer (concat (for [anyone (:overlaps p)]
                                              {:self (:id p)
                                               :other (:id anyone)
@@ -34,8 +30,6 @@
                                               :other (:id weaker)
                                               :bid {:energy 0.01}
                                               :ask {}}))})})))])
-
-;(wrap-rotation (+ (:rotation p) (- (rand 0.2) 0.1)))
    
 (defn settings []
   {})
