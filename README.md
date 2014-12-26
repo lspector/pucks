@@ -44,7 +44,7 @@ Every puck has a core, which may be solid, and a porous membrane.
 
 Pucks have batteries, consume energy, and die (leaving corpses) if they run out of power. 
 
-Active pucks are oriented in the plane, facing a single direction at a time. An active puck can sense nearby pucks and accelerate in the direction that it is facing.
+Active pucks are oriented in the plane, facing a single direction at a time. An active puck can sense nearby pucks and accelerate in the direction that it is facing (or a different direction if it has changed its thrust angle).
 
 Active pucks act by making proposals to the universe. The universe will accept proposals if they are permitted by physics and compatible with the proposals of other pucks. When conflicts arise the universe will arbitrate.
 
@@ -93,6 +93,7 @@ Key | Value | Default
 :memory | any information that the agent wants to store, in a map | empty map
 :inventory | items held by the agent | empty set
 :draw-function | a function that takes a puck and draws it to the screen | a function that draws nothing and returns false
+:bound-to | a sequence of puck IDs | empty sequence
 :proposal-function | a function that takes a puck and returns proposals in a map | a function that returns an empty map
 :spawn-function | a function that takes either no arguments or a puck and returns a puck that is a potential child | a function that returns an empty map
    
@@ -147,6 +148,7 @@ Key | Value | Condition | Payment
 :memory | a map (presumably containing key/value pairs from the bidding puck's memory)| none | the specified map is merged into the other puck's memory; nothing is removed from the bidding puck's memory
 :promise | a map | none | the specified map is merged into the bidding puck's memory (which will presumably influence its future bids)
 :request | anything | none | nothing; this serves only to communicate an interest in the transfer proceeding
+:bound-to | a puck ID | none | the bidding-puck's ID is added to the other puck's :bound-to sequence; :bound-to transfers must be mutual to be accepted
 
 Each step of a pucks simulation, the transactions that have proposed in that step are processed one at a time, in random order.
 

@@ -23,6 +23,7 @@
    :overlaps []
    :memory {}
    :inventory []
+   :bound-to []
    :draw-function (fn [p] false)
    :proposal-function (fn [p] {})
    :spawn-function (fn [p] {})})
