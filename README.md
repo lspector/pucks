@@ -179,6 +179,7 @@ Setting | Description | Default
 :torpedo-energy | the amount of energy transferred from a puck to a torpedo that it fires | 0.1
 :ms-limit | the number of milliseconds that the simulation should run; if nil then it will run forever or until manually terminated; if a number then the simulation will run for that many milliseconds, print the number of iterations completed, and exit | nil
 :pause-on-start | if true then the simulation will be paused immediately when started | false
+:bond-strength | the proportion of an agent's velocity that will be determined from the average of its bound group; 0.0 makes bonds completely ineffective, while 1.0 causes bound pucks to have identical velocities | 0.95
 
 
 ## Contributors
