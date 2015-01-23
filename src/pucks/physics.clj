@@ -141,21 +141,33 @@ transfer from another agent is required for the transfer to proceed."
 
 (defn enforce-bonds
   "Takes a sequence of agents for which new velocities have been calculated and
-returns a sequence of the agents with the velocities adjusted to enforce the bonds
-between agents."
+returns a sequence of the agents with the velocities and adjusted to enforce 
+the bonds between agents."
   [agents]
   (let [agent-map (zipmap (map :id agents) agents)]
     (mapv (fn [a]
-            (if (:bound-to a)
-              (assoc a 
-                     :velocity
-                     (+v (*v (- 1.0 (:bond-strength @pucks-settings)) 
-                             (:velocity a))
-                         (*v (:bond-strength @pucks-settings) 
-                             (apply avgv (mapv :velocity
-                                               (mapv #(get agent-map %)
-                                                     (:bound-to a)))))))
-              a))
+            (let [new-v (if (empty? (:bound-to a))
+                          (:velocity a)
+                          (let [bound-agents (mapv #(get agent-map %)
+                                                   (:bound-to a))]
+                            (apply avgv
+                                   (mapv (fn [b]
+                                           (let [bond-influence 
+                                                 (clamp01 
+                                                   (/ (* 2 
+                                                         (- (distance (:position a)
+                                                                      (:position b))
+                                                            (:radius a)))
+                                                      (:radius a)))]
+                                             (+v (*v (- 1.0 bond-influence) 
+                                                     (:velocity a))
+                                                 (*v bond-influence
+                                                     (avgv (:velocity a) (:velocity b))))))
+                                         bound-agents))))
+                  new-p (wrap-position (+v (:position a) new-v))]
+              (-> a
+                (assoc :velocity new-v)
+                (assoc :position new-p))))
           agents)))
             
 (defn arbitrate-proposals
@@ -277,7 +289,8 @@ changes to the world."
                                                                                                       colliding-neighbors))))))
                                                                (/ (:max-velocity @pucks-settings) radius)))
                                                 [0 0])
-                                        new-p (wrap-position (+v position new-v))
+                                        ;; new position will be set in enforce-bonds
+                                        ;new-p (wrap-position (+v position new-v))
                                         proposed-r (if (:rotation proposals) (wrap-rotation (:rotation proposals)) nil)
                                         new-r (if (and mobile proposed-r)
                                                 (wrap-rotation
@@ -370,7 +383,8 @@ changes to the world."
                                               [])
                                             [(-> agent
                                                (assoc :velocity new-v) ;; new velocity
-                                               (assoc :position new-p) ;; new position
+                                               ;; new position will be set in enforce-bonds
+                                               ;(assoc :position new-p) ;; new position
                                                (assoc :rotation new-r) ;; new rotation
                                                (assoc :thrust-angle new-ta) ;; new thrust-angle
                                                (assoc :energy          ;; new energy (deducting costs)

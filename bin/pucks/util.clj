@@ -152,3 +152,13 @@ multicore processor utilization, and 4) takes only one coll so far."
   (let [[without-item with-item] (split-with #(not (= item %)) s)]
     (concat without-item (rest with-item))))
 
+(defn clamp01
+  "Returns number n if it is between 0.0 and 1.0, 0.0 if n is negative, and 
+   1.0 if it is greater than 1.0."
+  [n]
+  (if (neg? n)
+    0.0
+    (if (> n 1.0)
+      1.0
+      n)))
+
