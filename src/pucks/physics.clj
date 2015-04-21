@@ -117,6 +117,20 @@ transfer's :self to the transfer's :other)."
     (assoc self (without (self agent-map) bid))
     (assoc other (with (other agent-map) bid))))
 
+(defn process-wound-in-agent-map
+  "Takes a transfer with woundsand a map from ids to agents, and returns the 
+map changed to reflect the transfer."
+  [{:keys [self other wound]} agent-map]
+  (if wound
+    (-> agent-map
+      (dissoc self)
+      (dissoc other)
+      (assoc self (without (self agent-map) wound))
+      (assoc other (+ 
+                     (:wound (other agent-map)) 
+                     (:energy wound))))
+    agent-map))
+
 (defn all-pairs 
   "Returns a vector of all possible pairs of items from vector v."
   [v]
@@ -250,8 +264,12 @@ changes to the world."
                                                     (->> agent-map 
                                                       (process-transfer-bid-in-agent-map xfer1)
                                                       (process-transfer-bid-in-agent-map xfer2)))
-                                             ;; otherwise
-                                             (recur (rest remaining) agent-map)))))))))]
+                                             ;; if there is no transaction that makes both agents happy
+                                             ;; check to see if either agents wants to wound the other, and can afford to.
+                                             (recur (rest remaining) 
+                                                    (->> agent-map
+                                                      (process-wound-in-agent-map xfer1)
+                                                      (process-wound-in-agent-map xfer2)))))))))))]
         ;; The world after all transactions have been conducted is now in post-xfer-agents.
         ;; Now we can process all other proposals for agents taken individually. 
         (enforce-bonds 

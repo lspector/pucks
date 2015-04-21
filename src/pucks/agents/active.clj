@@ -51,6 +51,7 @@
   (merge (generic)
          {:mobile true
           :active true
+          :wound 0
           :color [128 255 0]
           :eye-color [255 255 0]
           :core-color [0 255 0]

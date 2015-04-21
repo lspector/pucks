@@ -1,6 +1,6 @@
 (ns pucks.worlds.dev.world14  
   (:use [pucks core globals]
-        [pucks.agents vent nursery linear spawner]))
+        [pucks.agents vent nursery linear spawner corpse]))
 
 (defn agents []
   (vec (concat 
