@@ -16,16 +16,7 @@
    (assoc (vent) :position [500 100] :solid false)
    (assoc (vent) :position [100 500] :solid false)
    (assoc (vent) :position [266 466] :solid false)
-   (assoc (vent) :position [466 266] :solid false)
-   ]
-  #_(vec (concat 
-          #_(for [x (range 100 600 400 #_200)
-                 y (range 100 600 400 #_200)]
-             (assoc (vent) :position [x y] :mobile false :solid false))
-          #_(for [x (range 50 600 100)
-                 y (range 50 600 100)]
-             (assoc (stone) :position [x y] :mobile false))
-          [(assoc (nursery pusher) :position [200 200] :solid false)])))
+   (assoc (vent) :position [466 266] :solid false)]
 
 (defn settings []
   {:screen-size 600
