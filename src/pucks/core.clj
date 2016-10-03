@@ -62,7 +62,8 @@ GUI interactions."
           scaled-y (int (/ (mouse-y) (:scale @pucks-settings)))]
       ;(pprint (mapv abbreviate-embedded-agents
       ;              (objects-overlapping-xy scaled-x scaled-y)))
-      (inspect-tree (objects-overlapping-xy scaled-x scaled-y)))))
+      ;(inspect-tree (objects-overlapping-xy scaled-x scaled-y))
+      (inspect-tree (mapv abbreviate-embedded-agents (objects-overlapping-xy scaled-x scaled-y))))))
 
 (defn run-pucks [agents settings]
   "Run a pucks simulation with the provided agents and settings (which will
@@ -77,7 +78,8 @@ be merged with the defaults)."
           :title "pucks"
           :setup setup
           :draw draw
-          :size [scaled-screen-size scaled-screen-size])))
+          :size [scaled-screen-size scaled-screen-size]
+          :features [:exit-on-close])))
 
 (defn -main 
   "This main function allows simulations to be run from the command line with:
