@@ -78,3 +78,5 @@ bin/pucks/worlds/dev/world9.clj
 target/base+system+user+dev/classes/META-INF/maven/pucks/pucks/pom.properties
 
 target/base+system+user+dev/classes/META-INF/maven/pucks/pucks/pom.properties
+
+*.dependencies
