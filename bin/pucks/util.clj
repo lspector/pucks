@@ -121,8 +121,9 @@ size."
   [a]
   (-> a
     (assoc :neighbors (mapv #(do {:abbrev (:id %)}) (:neighbors a)))
-    (dissoc :sensed (mapv #(do {:abbrev (:id %)}) (:sensed a)))
-    (dissoc :overlaps (mapv #(do {:abbrev (:id %)}) (:overlaps a)))))
+    (assoc :sensed (mapv #(do {:abbrev (:id %)}) (:sensed a)))
+    (assoc :overlaps (mapv #(do {:abbrev (:id %)}) (:overlaps a)))
+    (assoc :proposals (assoc (:proposals a) :spawn :abbrev))))
 
 (defn print-stats []
   "Prints a statistics about the state of the world."

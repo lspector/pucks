@@ -273,7 +273,10 @@ changes to the world."
                                                                         (mapv -v (mapv :position
                                                                                        colliding-neighbors)))))
                                                            [0 0])
-                                        just-collided (not (zero? (length anti-collision-a)))
+                                        just-collided (and mobile
+                                                           (not (zero? (length anti-collision-a)))
+                                                           (some (fn [neigh] (not (some #{(:id neigh)} (:bound-to agent))))
+                                                                 colliding-neighbors))
                                         new-a (limit-vec2D (+v proposed-a anti-collision-a) 
                                                            (* (if just-collided 10 1)
                                                               (:max-acceleration @pucks-settings)))
@@ -391,8 +394,16 @@ changes to the world."
                                                       (min 1
                                                            (max 0
                                                                 (- energy 
-                                                                   (if mobile (:cost-of-living @pucks-settings) 0)
-                                                                   (if just-collided (:cost-of-collision @pucks-settings) 0)
+                                                                   (if (and mobile
+                                                                            (not (:stone agent)))
+                                                                     (:cost-of-living @pucks-settings) 
+                                                                     0)
+                                                                   (if (and just-collided
+                                                                            (not (:vent agent))
+                                                                            (not (:nursery agent))
+                                                                            (not (:stone agent)))
+                                                                     (:cost-of-collision @pucks-settings) 
+                                                                     0)
                                                                    (if (:vent agent) -0.005 0)
                                                                    (if (and (:fire-torpedo proposals)
                                                                             (> energy 0.1))

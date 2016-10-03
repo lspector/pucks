@@ -3,8 +3,9 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "https://github.com/lspector/pucks"}
-  :dependencies [[org.clojure/clojure "1.6.0"]
-                 [quil "2.2.2"]]
+  :dependencies [[org.clojure/clojure "1.7.0"]
+                 [quil "2.4.0"]
+                 [clojush "2.8.0"]]
   :main pucks.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}}

@@ -28,7 +28,8 @@
 
 (defn vent-proposals [p]
   {:transfer (into [] (for [recipient (filter (complement :torpedo)
-                                              (filter :mobile (:overlaps p)))]
+                                              (filter (complement :stone)
+                                                      (filter :mobile (:overlaps p))))]
                         {:self (:id p)
                          :other (:id recipient)
                          :bid {:energy 0.01}

@@ -12,6 +12,7 @@
            (let [with-corpses
                  (mapv #(if (and (:mobile %) (not (pos? (:energy %))))
                           (merge % {:corpse true
+                                    :solid false
                                     :death-step (:steps %)
                                     :mobile false
                                     :color [100 100 100] 
