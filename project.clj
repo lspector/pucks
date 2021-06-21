@@ -3,8 +3,8 @@
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
             :url "https://github.com/lspector/pucks"}
-  :dependencies [[org.clojure/clojure "1.7.0"]
-                 [quil "2.4.0"]
+  :dependencies [[org.clojure/clojure "1.10.1"]
+                 [quil "4.0.0-SNAPSHOT"]
                  [clojush "2.8.0"]]
   :main pucks.core
   :target-path "target/%s"
