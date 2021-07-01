@@ -1,0 +1,18 @@
+p {
+  color: #bb7fbb;
+  font-size: 18px;
+  font-family: Raleway, sans-serif;
+  text-align: center;
+  text-shadow: 4px 4px 4px #d696d6d6;
+}
+select{
+    text-align-last:center;
+    padding-right: 29px;
+    direction: rtl;
+}
+body {
+  background-color: #ffe6e6;
+}
+#pucks {
+    text-align:center;
+}

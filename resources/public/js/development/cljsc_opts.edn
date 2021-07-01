@@ -1,0 +1,1 @@
+{:output-wrapper false, :externs ["closure-js/externs"], :libs ["closure-js/libs"], :main "pucks.core", :output-to "resources/public/js/main.js", :output-dir "resources/public/js/development", :asset-path "js/development"}
