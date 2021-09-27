@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
+      <link href='./style.css' rel='stylesheet'>
+    <title>pucks</title>
+  </head>
+  <body>
+    <p>Pucks: An environment for experiments and education in artificial intelligence and artificial life.</p>
+
+    <div align="center">
+    <select id="mySelect" onchange="myFunction()">
+        <option value="World1">World1</option>
+        <option value="World2">World2</option>
+        <option value="World3">World3</option>
+        <option value="World4">World4</option>
+        <option value="World5">World5</option>
+        <option value="World6">World6</option>
+        <option value="World7">World7</option>
+        <option value="World8">World8</option>
+        <option value="World9">World9</option>
+        <option value="World10">World10</option>
+    </select>
+    </div>
+    <div id="pucks">
+        <script src="js/main.js"></script>
+        <script>
+    function myFunction() {
+        var x = document.getElementById("mySelect").value;
+        pucks.core._main(x);
+        }
+    </script>
+    </div>
+<!--    <script>pucks.core._main()</script>-->
+  </body>
+</html>
