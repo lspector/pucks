@@ -20,7 +20,7 @@ This will run one of the "development" worlds, containing an assortment of rando
     
 This will run a different "development" worlds, with modified settings:
         
-    $ lein run pucks.worlds.dev.world3 :screen-size 600 :max-velocity 0.1
+    $ lein run pucks.worlds.dev.world3 :screen-size 600 :max-velocity 40
     
 The available settings and their defaults are in src/pucks/globals.clj.
 
@@ -216,9 +216,11 @@ Lee Spector (primary author)
 
 Eddie Pantridge (testing, contributions to neighbor detection and timing code)
 
+Justin Fong (Clojurescript compatibility)
+
 
 ## License
 
-Copyright (c) 2014 Lee Spector
+Copyright (c) 2014-2022 Lee Spector
 
 Distributed under the Eclipse Public License version 1.0.
