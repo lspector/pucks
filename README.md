@@ -158,6 +158,8 @@ The pucks transfer system is still under development and will continue to change
 
 World files should define zero-argument functions named agents and settings. The agents function should return a sequence of agents, which will be used as the initial agents in simulations, and the settings function should return a map that maps settings keywords to desired values. Once a world file is loaded, evaluating (run-pucks (agents) (settings)) will run a simulation that starts with the agents produced by the call to agents, using the settings that result from merging the default settings with the results of the call to settings.
 
+New worlds should be preloaded as namespaces in `core.cljs` and `core.clj` using using `:require :as`. This is due to namespaces not being able to be loaded during runtime in ClojureScript, so they must be preloaded using `:require` for both Clj and Cljs support.
+
 ## Settings
 
 The following simulation settings are set in src/pucks/globals.clj and can be reset in world files and/or on the leiningen command line:
@@ -180,6 +182,33 @@ Setting | Description | Default
 :ms-limit | the number of milliseconds that the simulation should run; if nil then it will run forever or until manually terminated; if a number then the simulation will run for that many milliseconds, print the number of iterations completed, and exit | nil
 :pause-on-start | if true then the simulation will be paused immediately when started | false
 
+## Publishing a Quil Sketch
+
+Before you publish your sketch, run `lein do clean, cljsbuild once optimized`. This will compile your code and run Google Closure Compiler with advanced optimizations. 
+
+##Using Github Pages
+Having run the Google Clojure Compiler, the files in the `resources/public` directory (index.html, style.css, js) can now be used to host the website. 
+
+If you are creating an independent repository, you will need to name the repository in the following format:`<user>.github.io` or `<organization>.github.io`. 
+
+
+If you are using an existing repository, you will need to make a subtree first. Since `public` will be the folder that holds pucks, we will use that as an example.
+
+
+`git add public && git commit -m "Initial dist subtree commit"`
+
+Use subtree push to send it to the `gh-pages` branch on GitHub.
+
+`git subtree push --prefix dist origin gh-pages`
+
+You could also copy the files and push them onto a new `gh-pages` branch using Github Desktop.
+
+If you are creating an independent repository, you can push the files in the `resources/public` folder to your repository.
+
+To find the link to your hosted website, go to your repository settings and look for the pages tab.
+You will see a section titled `Source`, where you will be able to set the source directory for your GitHub website.
+You should set your source directory to the branch where you pushed your code from `resources/public`. If you made an
+ independent repository, then it should be the `master` branch, or the `gh-pages` branch if you used an existing repository.
 
 ## Contributors
 

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <link rel="preconnect" href="https://fonts.googleapis.com">
+      <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+      <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600&display=swap" rel="stylesheet">
+      <link href='./style.css' rel='stylesheet'>
+    <title>pucks</title>
+  </head>
+  <body>
+    <p>Pucks: An environment for experiments and education in artificial intelligence and artificial life.</p>
+
+    <div align="center">
+
+    <select id="mySelect">
+        <option value="World1">World1</option>
+        <option value="World2">World2</option>
+        <option value="World3">World3</option>
+        <option value="World4">World4</option>
+        <option value="World5">World5</option>
+        <option value="World6">World6</option>
+        <option value="World7">World7</option>
+        <option value="World8">World8</option>
+        <option value="World9">World9</option>
+        <option value="World10">World10</option>
+        <option value="World11">World11</option>
+        <option value="World12">World12</option>
+        <option value="World13">World13</option>
+        <option value="World14">World14</option>
+        <option value="World15">World15</option>
+        <option value="World16">World16</option>
+        <option value="World17">World17</option>
+        <option value="World18">World18</option>
+        <option value="World19">World19</option>
+        <option value="World20">World20</option>
+        <option value="World21">World21</option>
+        <option value="World22">World22</option>
+        <option value="World23">World23</option>
+        <option value="World24">World24</option>
+        <option value="aiWorld1">aiWorld1</option>
+        <option value="aiWorld2">aiWorld2</option>
+        <option value="aiWorld3">aiWorld3</option>
+        <option value="aiWorld4">aiWorld4</option>
+        <option value="aiWorld5">aiWorld5</option>
+        <option value="aiWorld6">aiWorld6</option>
+        <option value="aiWorld7">aiWorld7</option>
+        <option value="aiWorld8">aiWorld8</option>
+    </select>
+        <button id="btn">Run!</button>
+
+        <script> document.getElementById('btn').addEventListener("click", function(){
+        var x = document.getElementById("mySelect").value;
+        pucks.core._main(x);});</script>
+
+    </div>
+    <div id="pucks">
+        <script src="js/main.js"></script>
+    </div>
+<!--    <script>pucks.core._main()</script>-->
+  </body>
+</html>

@@ -1,20 +1,39 @@
-(defproject pucks "0.1.26"
-  :description "An environment for experiments and education in artificial intelligence and artificial life."
+(defproject pucks "0.1.0-SNAPSHOT"
+  :description "FIXME: write description"
   :url "http://example.com/FIXME"
   :license {:name "Eclipse Public License"
-            :url "https://github.com/lspector/pucks"}
+            :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [quil "4.0.0-SNAPSHOT"]
-                 [clojush "2.8.0"]]
+                 [org.clojure/clojurescript "1.10.520"]
+                 [net.clojars.lspector/propeller "0.2.1"]]
+
+  :plugins [[lein-cljsbuild "1.1.7"]
+            [lein-figwheel "0.5.19"]]
+  :hooks [leiningen.cljsbuild]
+
+  :profiles {:uberjar {:aot :all}}
+  :resource-paths ["target"]
   :main pucks.core
   :target-path "target/%s"
-  :profiles {:uberjar {:aot :all}}
-  ;; the following should automatically take n% of the machine's RAM and also use the G1 garbage collector
-  ;:jvm-opts ~(let [mem-to-use (long (* (.getTotalPhysicalMemorySize
-  ;                                       (java.lang.management.ManagementFactory/getOperatingSystemMXBean))
-  ;                                     0.5))]
-  ;             [(str "-Xmx" mem-to-use)
-  ;              (str "-Xms" mem-to-use)
-  ;              ;"-XX:+UseG1GC"
-  ;              ])
-  )
+
+  :clean-targets ^{:protect false} ["resources/public/js"]
+  :cljsbuild
+  {:builds [; development build with figwheel hot swap
+            {:id "development"
+             :source-paths ["src"]
+             :figwheel true
+             :compiler
+             {:main "pucks.core"
+              :output-to "resources/public/js/main.js"
+              :output-dir "resources/public/js/development"
+              :asset-path "js/development"}}
+            ; minified and bundled build for deployment
+            {:id "optimized"
+             :source-paths ["src"]
+             :compiler
+             {:main "pucks.core"
+              :output-to "resources/public/js/main.js"
+              :output-dir "resources/public/js/optimized"
+              :asset-path "js/optimized"
+              :optimizations :advanced}}]})
